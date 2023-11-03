@@ -9,7 +9,7 @@ create table logins
 (
     logId    varchar(50),
     password varchar(50),
-    primary key (logId, password)
+    primary key (logId)
 );
 
 -- Tabla funcionarios
@@ -32,7 +32,8 @@ create table agenda
 (
     nro        integer,
     ci         integer(7),
-    fch_agenda date
+    fch_agenda date,
+    primary key(nro)
 );
 
 -- Tabla carnet salud
@@ -40,7 +41,8 @@ create table carnet_salud(
     ci integer,
     fch_emision date,
     fch_vencimiento date,
-    comprobante blob
+    comprobante blob,
+    primary key (ci,fch_emision)
 );
 
 -- Tabla periodos_actualizacion
@@ -48,5 +50,6 @@ create table periodos_actualizacion(
     año year,
     semestre integer check(semestre in (1,2)),
     fch_inicio date,
-    fch_fin date
+    fch_fin date,
+    primary key (año, semestre, fch_inicio, fch_fin)
 );

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-formulario',
@@ -6,6 +7,22 @@ import { Component } from '@angular/core';
   styleUrls: ['./formulario.component.css']
 })
 export class FormularioComponent {
+
+  //CI, nombre, fecha nacimiento, tiene carne de salud (chkbtn), fchvnc carne, comprobante (pdf o jpg)
+
+
+  title = 'Angular Form Validation Tutorial';
+  angForm: FormGroup;
+  constructor(private fb: FormBuilder) {
+    this.createForm();
+  }
+  createForm() {
+    this.angForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(5)]],
+      address: ['', Validators.required]
+    });
+  }
+
 
   ngOnInit(): void {
     (function () {

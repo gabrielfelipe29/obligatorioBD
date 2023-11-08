@@ -15,7 +15,6 @@ export class FormularioComponent implements OnInit {
 
   }
   date = new Date;
-  title = 'Angular Form Validation Tutorial';
   angForm: FormGroup;
   constructor(private fb: FormBuilder) {
     this.createForm();

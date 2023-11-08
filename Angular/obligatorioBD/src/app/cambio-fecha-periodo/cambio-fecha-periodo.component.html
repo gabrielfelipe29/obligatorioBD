@@ -1,1 +1,29 @@
-<p>cambio-fecha-periodo works!</p>
+<!-- app.component.html -->
+
+<div class="container">
+    <h1>
+        CAMBIO FECHA FIN PERÍODO
+    </h1>
+    <form [formGroup]="angForm" novalidate>
+        <div class="form-group">
+            <label>Fecha Fin Periodo:</label>
+            <input class="form-control" formControlName="fchVen" min="{{date | date:'yyyy-MM-dd'}}" type="date">
+        </div>
+
+        <div class="error" *ngIf="angForm.controls['fchVen'].invalid && (angForm.controls['fchVen'].dirty 
+            || angForm.controls['fchVen'].touched)">
+            <div [hidden]="!angForm.controls['fchVen'].errors.required">
+                Fecha de fin de período no puede estar vacía.
+            </div>
+        </div>
+
+        <br>
+        <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-success">
+            Guardar
+        </button>
+    </form>
+    <p>Form value: {{ angForm.value | json }}</p>
+    <p>Form pristine: {{ angForm.pristine }}</p>
+    <p>Form invalid: {{ angForm.invalid }}</p>
+    <p>Form status: {{ angForm.status | json }}</p>
+</div>

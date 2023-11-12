@@ -3,6 +3,6 @@ const config = require('./config');
 
 const app = express();
 
-app.set('port', config.app.port)
+app.set('port', config.app.port);
 
-module.exports = app;
+module.export = app;

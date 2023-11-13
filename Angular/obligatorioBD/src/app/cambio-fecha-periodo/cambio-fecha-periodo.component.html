@@ -2,9 +2,24 @@
 
 <div class="container">
     <h1>
-        CAMBIO FECHA FIN PERÍODO
+        CAMBIO FECHA PERÍODO
     </h1>
     <form [formGroup]="angForm" novalidate>
+        <div class="form-group">
+            <label>Fecha Inicio Periodo:</label>
+            <input class="form-control" formControlName="fchIn" min="{{date | date:'yyyy-MM-dd'}}" type="date">
+        </div>
+
+        <div class="error" *ngIf="angForm.controls['fchIn'].invalid && (angForm.controls['fchIn'].dirty 
+            || angForm.controls['fchIn'].touched)">
+            <div [hidden]="!angForm.controls['fchIn'].errors.required">
+                Fecha de inicio de período no puede estar vacía.
+            </div>
+            <div [hidden]="!angForm.controls['fchIn'].errors.fechasInvalidas">
+                Fecha de inicio de período no puede ser después a la fecha de inicio de periodo.
+            </div>
+        </div>
+
         <div class="form-group">
             <label>Fecha Fin Periodo:</label>
             <input class="form-control" formControlName="fchVen" min="{{date | date:'yyyy-MM-dd'}}" type="date">
@@ -15,15 +30,18 @@
             <div [hidden]="!angForm.controls['fchVen'].errors.required">
                 Fecha de fin de período no puede estar vacía.
             </div>
+            <div [hidden]="!angForm.controls['fchVen'].errors.fechasInvalidas">
+                Fecha de fin de periodo no puede ser anterior a la fecha de inicio de periodo
+            </div>
         </div>
+
+        <!-- <div class="error" *ngIf="angForm?.errors?.['fechasInvalidas']">
+            Fecha de fin de periodo no puede ser anterior a la fecha de inicio de periodo
+        </div> -->
 
         <br>
         <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-success">
             Guardar
         </button>
     </form>
-    <p>Form value: {{ angForm.value | json }}</p>
-    <p>Form pristine: {{ angForm.pristine }}</p>
-    <p>Form invalid: {{ angForm.invalid }}</p>
-    <p>Form status: {{ angForm.status | json }}</p>
 </div>

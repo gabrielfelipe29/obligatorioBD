@@ -1,4 +1,7 @@
-
+textarea {
+  width: 50%;
+  height: 50%;
+}
 
 .botones {
   display: flex;

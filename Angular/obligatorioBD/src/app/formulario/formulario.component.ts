@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormularioService } from '../formulario.service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-formulario',
@@ -16,7 +18,7 @@ export class FormularioComponent implements OnInit {
   }
   date = new Date;
   angForm: FormGroup;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private service: FormularioService) {
     this.createForm();
   }
   createForm() {
@@ -49,5 +51,32 @@ export class FormularioComponent implements OnInit {
     }
     controlFchVen.updateValueAndValidity();
     controlComprobante.updateValueAndValidity();
+  }
+
+  enviarFormulario() {
+    console.log(this.angForm.value);
+    console.log(JSON.parse(this.angForm.value));
+    console.log(JSON.stringify(this.angForm.value));
+    const formulario = { formulario: this.angForm.value };
+    this.service.enviar(formulario).subscribe(
+      data => {
+        if (data) {
+          //mostrar msg de exito
+
+
+        }
+      },
+      error => {
+        //cambiar los msg de error en base a back
+        if (error.status == 401) {
+          alert("Error, contraseña incorrecta o usuario incorrecto")
+        }
+
+        if (error.status == 400) {
+          alert("Error en el formato de los datos")
+        }
+        console.log(error);
+      });
+
   }
 }

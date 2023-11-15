@@ -88,8 +88,10 @@
             </div>
         </div>
         <br>
-        <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-success">
+        <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-success"
+            (click)="enviarFormulario()">
             Guardar
         </button>
     </form>
+    
 </div>

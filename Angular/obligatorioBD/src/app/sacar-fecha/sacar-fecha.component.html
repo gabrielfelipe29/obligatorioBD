@@ -1,1 +1,29 @@
-<p>sacar-fecha works!</p>
+<div class="container" *ngIf="formSubmitted">
+    <form [formGroup]="group" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Nombre:</label>
+        <input class="form-control" formControlName="name" type="text">
+      </div>
+  
+      <div class="form-group">
+        <label>CI:</label>
+        <input class="form-control" formControlName="ci" type="text" minlength="7" maxlength="8" pattern="[0-9]*">
+      </div>
+  
+      <div class="form-group">
+        <label>Elegir fecha</label>
+        <input class="form-control" formControlName="fchNac" type="date">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+  
+    <!-- Mensaje de confirmación -->
+    <div *ngIf="formSubmitted">
+      <p>Su consulta fue guardada.</p>
+    </div>
+</div>
+<div *ngIf="mostrar">
+    <p>Su consulta fue enviada.</p>
+</div>
+  

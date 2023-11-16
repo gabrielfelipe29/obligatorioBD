@@ -6,8 +6,10 @@ import { SacarFechaComponent } from './sacar-fecha/sacar-fecha.component';
 import { FormularioComponent } from './formulario/formulario.component';
 import { ListadoGenteComponent } from './listado-gente/listado-gente.component';
 import { CambioFechaPeriodoComponent } from './cambio-fecha-periodo/cambio-fecha-periodo.component';
+import { MenuComponent } from './menu/menu.component';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'menu', component: MenuComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'sacarfecha', component: SacarFechaComponent },

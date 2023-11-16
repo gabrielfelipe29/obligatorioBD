@@ -35,45 +35,28 @@ export class ListadoGenteComponent {
       this.email = this.email + this.personas[i].email + " \n";
     }
 
-    /*
-       var copyText = (<HTMLInputElement>document.getElementById("email"));
-      
-           copyText.onclick = function () {
-             document.execCommand("copy");
-           }
-       
-           copyText.addEventListener("copy", function (event) {
-             event.preventDefault();
-             if (event.clipboardData) {
-               event.clipboardData.setData("text/plain", copyText.value);
-               console.log(event.clipboardData.getData("text"))
-             }
-           });*/
 
-  }
+    var copyText = (<HTMLInputElement>document.getElementById("email"));
 
-  copiarTexto(event): void {
-    var email = (<HTMLInputElement>document.getElementById("email"));
-    event.preventDefault();
-    document.execCommand("copy");
-    if (event.clipboardData) {
-      event.clipboardData.setData("text/plain", email.value);
-      console.log(event.clipboardData.getData("text"))
+    copyText.click = function () {
+      document.execCommand("copy");
     }
 
-    /*
-        var copyText = (<HTMLInputElement>document.getElementById("email"));
-    
-        // Select the text field
-        copyText.select();
-        copyText.setSelectionRange(0, 99999); // For mobile devices
-    
-        // Copy the text inside the text field
-        navigator.clipboard.writeText(copyText.value);
-    
-        // Alert the copied text
-        alert("Copied the text: " + copyText.value);
-    */
+    copyText.addEventListener("copy", function (event) {
+      event.preventDefault();
+      if (event.clipboardData) {
+        event.clipboardData.setData("text/plain", copyText.value);
+        console.log(event.clipboardData.getData("text"))
+      }
+    });
   }
+
+  copiarTexto() {
+    var copyText = (<HTMLInputElement>document.getElementById("email"));
+    copyText.select();
+    navigator.clipboard.writeText(copyText.value);
+  }
+
+
 
 }

@@ -11,6 +11,9 @@ import { FormularioComponent } from './formulario/formulario.component';
 import { SacarFechaComponent } from './sacar-fecha/sacar-fecha.component';
 import { CambioFechaPeriodoComponent } from './cambio-fecha-periodo/cambio-fecha-periodo.component';
 import { ListadoGenteComponent } from './listado-gente/listado-gente.component';
+import { HttpClientModule } from '@angular/common/http';
+import { MenuComponent } from './menu/menu.component';
+
 
 @NgModule({
   declarations: [
@@ -20,13 +23,15 @@ import { ListadoGenteComponent } from './listado-gente/listado-gente.component';
     FormularioComponent,
     SacarFechaComponent,
     CambioFechaPeriodoComponent,
-    ListadoGenteComponent
+    ListadoGenteComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

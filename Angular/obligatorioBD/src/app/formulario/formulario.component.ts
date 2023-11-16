@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FormularioService } from '../formulario.service';
-import { JsonPipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-formulario',
@@ -18,7 +18,7 @@ export class FormularioComponent implements OnInit {
   }
   date = new Date;
   angForm: FormGroup;
-  constructor(private fb: FormBuilder, private service: FormularioService) {
+  constructor(private fb: FormBuilder, private service: FormularioService, private router: Router) {
     this.createForm();
   }
   createForm() {
@@ -53,16 +53,17 @@ export class FormularioComponent implements OnInit {
     controlComprobante.updateValueAndValidity();
   }
 
+  volver() {
+    this.router.navigate(['/menu']);
+  }
+
   enviarFormulario() {
-    console.log(this.angForm.value);
-    console.log(JSON.parse(this.angForm.value));
-    console.log(JSON.stringify(this.angForm.value));
     const formulario = { formulario: this.angForm.value };
     this.service.enviar(formulario).subscribe(
       data => {
         if (data) {
           //mostrar msg de exito
-
+          alert("Formulario enviado con éxito.");
 
         }
       },

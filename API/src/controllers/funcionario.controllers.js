@@ -60,12 +60,13 @@ function isValidCI(ci) {
     return ciRegex.test(ci);
 }
 
+
 // Log in
 
 //Registrar a un funcionario.
 export const addFuncionario = async (req, res)=>{
     try {
-        const { ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId } = req.body;
+        const { ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId, contraseña} = req.body;
 
         // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
 
@@ -78,10 +79,7 @@ export const addFuncionario = async (req, res)=>{
         }
 
         // Validación específica para la clave foránea logId
-        const logValido = await logIsValid(logId) ;
-        if (!logValido) {
-            return res.status(400).json({ error: 'El logId proporcionado no existe en la tabla logins.' });
-        }
+        
 
         // Validación específica del nombre
         if (!isValidName(nombre)) {
@@ -92,6 +90,8 @@ export const addFuncionario = async (req, res)=>{
         if (!isValidCI(ci)) {
             return res.status(400).json({ error: 'Se requiere que la cédula sea un número de 6, 7 u 8 dígitos.' });
         }
+
+        
         
 
         // Validación específica del apellido
@@ -110,13 +110,14 @@ export const addFuncionario = async (req, res)=>{
         const connection = await pool.getConnection();
 
         // Realizamos la inserción del nuevo funcionario
-        const [result] = await connection.execute('INSERT INTO funcionarios (ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId]);
+        const [result1] = await connection.execute('INSERT INTO logins (logId, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [logId, contraseña]);
+        const [result2] = await connection.execute('INSERT INTO funcionarios (ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId]);
 
         // Liberamos la conexión
         connection.release();
 
         // Respondemos con el resultado de la inserción
-        res.status(201).json({ id: result.insertId, mensaje: 'Funcionario agregado correctamente.' });
+        res.status(201).json({ id: result1.insertId, mensaje: 'Funcionario agregado correctamente.'}, { id: result2.insertId, mensaje: 'Funcionario agregado correctamente.'});
 
     } catch (error) {
         console.error('Error al agregar el funcionario:', error);

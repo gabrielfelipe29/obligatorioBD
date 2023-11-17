@@ -87,4 +87,11 @@ select fch_agenda from agenda where ci = 1234567;
 
 insert into agenda (ci, fch_agenda) values (12314324, '2023-01-15');
 
-drop table agenda
+drop table agenda;
+
+INSERT INTO logins (logId, password) VALUES ('usuario5',
+     '123');
+
+
+
+INSERT INTO funcionarios (ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId) VALUES ( 12345678, 'Lucas', 'Juanico', '1971-1-12', 'Av. Italia 1234', 12432,  'a@gmail.com', 'usuario21');

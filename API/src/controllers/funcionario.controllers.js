@@ -31,15 +31,18 @@ const ciRegex = /^\d{6,8}$/;
 // Funciones para validar los datos pasados por parametro
 
 function avoidSQLInjection(string) {
-    if (string.includes('-')) {
-        return false;
-    }else if (string.toLowerCase().includes('drop')) {
-        return false;
-    }else if (string.toLowerCase().includes('table')) {
-        return false;
-    }else{
-        return true;
-    }  
+    if(!onlyNumbers(string)){
+        if (string.includes('--')) {
+            return false;
+        }else if (string.toLowerCase().includes('drop')) {
+            return false;
+        }else if (string.toLowerCase().includes('table')) {
+            return false;
+        }else{
+            return true;
+        }  
+    }else 
+        return true;        
 }
 
 async function logIsValid(logId) {  // Esta función debe ser asincrónica ya que debe hacer una consulta a la tabla de login
@@ -52,6 +55,10 @@ async function logIsValid(logId) {  // Esta función debe ser asincrónica ya qu
     return true;
 }
 
+function onlyNumbers(s) {
+    return /^\d+$/.test(s);
+}
+
 function isValidName(name) {
     return nameRegex.test(name);
 }
@@ -60,67 +67,104 @@ function isValidCI(ci) {
     return ciRegex.test(ci);
 }
 
+function CorreoUCU(email) {
+    // Expresión regular para verificar si el correo termina en "@ucu.edu.uy"
+    var regex = /^[a-zA-Z0-9._-]+@ucu\.edu\.uy$/;
+    return regex.test(email);
+}
+
+function validDate(fecha) {
+    // Expresión regular para el formato "aaaa-mm-dd"
+    var regex = /^\d{4}-\d{2}-\d{2}$/;
+    return regex.test(fecha);
+}
+
+function validNumber(numero) {
+    // Expresión regular para verificar que el número tiene exactamente 7 dígitos
+    var regex = /^\d{7}$/;
+    return regex.test(numero);
+}
+
 
 // Log in
+
+export function add(req, res){
+    console.log(req)
+}
 
 //Registrar a un funcionario.
 export const addFuncionario = async (req, res)=>{
     try {
-        const { ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId, contraseña} = req.body;
 
         // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
 
-        if (!ci || !nombre || !apellido || !fch_nacimiento || !direccion || !telefono || !email || !logId) {
+        if (!req.body.ci || !req.body.nombre || !req.body.apellido || !req.body.fch_nacimiento || !req.body.direccion || !req.body.telefono || !req.body.email || !req.body.logId) {
             return res.status(400).json({ error: 'Se requieren todos los campos para agregar un funcionario.' });
         }
 
-        if (typeof nombre === 'string' && nombre.trim().length === 0) {
+        if (typeof req.body.nombre === 'string' && req.body.nombre.trim().length === 0) {
             return res.status(400).json({ error: 'El nombre no puede ser una cadena vacía.' });
         }
 
-        // Validación específica para la clave foránea logId
+        // Evacion de inyeccion sql
+        if(!avoidSQLInjection(req.body.nombre) || !avoidSQLInjection(req.body.ci) || !avoidSQLInjection(req.body.apellido) || !avoidSQLInjection(req.body.fch_nacimiento)
+            || !avoidSQLInjection(req.body.direccion) || !avoidSQLInjection(req.body.email) || !avoidSQLInjection(req.body.telefono || !avoidSQLInjection(req.body.logId))){
+            
+            return res.status(400).json({ error: 'Se ha detectado el intento de inyección sql.' });
+        }
         
 
         // Validación específica del nombre
-        if (!isValidName(nombre)) {
+        if (!req.body.nombre.length > 0) {
             return res.status(400).json({ error: 'Se requiere que el nombre no sea una cadena vacía o contener caracteres no permitidos.' });
         }
 
         // Validación específica del ci
-        if (!isValidCI(ci)) {
+        if (!isValidCI(req.body.ci)) {
             return res.status(400).json({ error: 'Se requiere que la cédula sea un número de 6, 7 u 8 dígitos.' });
         }
 
-        
-        
-
         // Validación específica del apellido
+        if (!req.body.apellido.length > 0) {
+            return res.status(400).json({ error: 'Se requiere que el apellido tenga un formato valido.' });
+        }
 
         // Validación específica de la fecha de nacimineto
+        if (!req.body.fch_nacimiento.length > 0 && validDate(req.body.fch_nacimiento)) {
+            return res.status(400).json({ error: 'Se requiere que la fecha de nacimiento tenga un formato valido.' });
+        }
 
         // Validación específica de la dirección 
+        if (!req.body.direccion.length > 0) {
+            return res.status(400).json({ error: 'Se requiere que el dirección tenga un formato valido.' });
+        }
 
         // Validación específica del telefono
+        if (req.body.telefono.length > 0 && validNumber(req.body.telefono)) {
+            return res.status(400).json({ error: 'Se requiere que el teléfono tenga un formato valido.' });
+        }
 
         // Validación específica del email
+        if (req.body.email.length > 0 && CorreoUCU(req.body.email)) {
+            return res.status(400).json({ error: 'Se requiere que el mail tenga un formato valido.' });
+        }
 
-        // Otros chequeos o validaciones según tus necesidades
 
         // Obtenemos una conexión del pool
         const connection = await pool.getConnection();
 
         // Realizamos la inserción del nuevo funcionario
-        const [result1] = await connection.execute('INSERT INTO logins (logId, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [logId, contraseña]);
-        const [result2] = await connection.execute('INSERT INTO funcionarios (ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId]);
+        const [result1] = await connection.execute('INSERT INTO logins (logId, password) VALUES (?, ?)', [req.body.logId, req.body.contraseña]);
+        const [result2] = await connection.execute('INSERT INTO funcionarios (ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.ci, req.body.nombre, req.body.apellido, req.body.fch_nacimiento, req.body.direccion, req.body.telefono, req.body.email, req.body.logId]);
 
         // Liberamos la conexión
         connection.release();
 
         // Respondemos con el resultado de la inserción
-        res.status(201).json({ id: result1.insertId, mensaje: 'Funcionario agregado correctamente.'}, { id: result2.insertId, mensaje: 'Funcionario agregado correctamente.'});
+        res.status(201).json("Registro realizado correctamente");
 
     } catch (error) {
         console.error('Error al agregar el funcionario:', error);
-        res.status(500).json({ error: 'Error interno del servidor.aasa' });
+        res.status(500).json({ error: 'Error interno del servidor.' });
     }
 }

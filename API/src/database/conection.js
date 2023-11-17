@@ -10,3 +10,5 @@ const pool = mysql2.createPool({
 });
 
 export default pool;
+
+//C:\Users\bruno\Desktop\Ucu\Cuarto Semestre\Base de datos\obligatorioBD\API\src\database\conection.js

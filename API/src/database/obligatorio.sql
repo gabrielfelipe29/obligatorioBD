@@ -30,14 +30,14 @@ create table funcionarios
 -- Tabla agenda
 create table agenda
 (
-    nro        integer,
+    nro        integer primary key AUTO_INCREMENT ,
     ci         integer(7),
     fch_agenda date
 );
 
 -- Tabla carnet salud
 create table carnet_salud(
-    ci integer,
+    ci integer primary key ,
     fch_emision date,
     fch_vencimiento date,
     comprobante blob
@@ -63,10 +63,10 @@ INSERT INTO funcionarios (ci, nombre, apellido, fch_nacimiento, direccion, telef
 (3456789, 'Carlos', 'López', '1988-11-10', 'Ruta 789', 555123456, 'carlos.lopez@email.com', 'usuario3');
 
 -- Insertar datos en la tabla agenda
-INSERT INTO agenda (nro, ci, fch_agenda) VALUES
-(1, 1234567, '2023-11-15'),
-(2, 2345678, '2023-11-20'),
-(3, 3456789, '2023-11-25');
+INSERT INTO agenda (ci, fch_agenda) VALUES
+( 1234567, '2023-11-15'),
+( 2345678, '2023-11-20'),
+( 3456789, '2023-11-25');
 
 -- Insertar datos en la tabla carnet_salud
 INSERT INTO carnet_salud (ci, fch_emision, fch_vencimiento, comprobante) VALUES
@@ -82,3 +82,7 @@ INSERT INTO periodos_actualizacion (año, semestre, fch_inicio, fch_fin) VALUES
 show tables;
 
 select * from funcionarios;
+
+select fch_agenda from agenda where ci = 1234567;
+
+insert into agenda ()

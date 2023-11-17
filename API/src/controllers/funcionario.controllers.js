@@ -1,4 +1,4 @@
-import pool from "../database/conection";
+import pool from "../database/conection.js";
 
 //Obtener todos los funcionarios.
 export const getFuncionarios = async (req, res)=>{
@@ -23,38 +23,87 @@ export const getFuncionarios = async (req, res)=>{
     }
 }
 
-// Función para validar si un logId existe en la tabla logins
-async function logValido(logId) {
-    const connection = await pool.getConnection();
-    const [result] = await connection.execute('SELECT COUNT(*) AS count FROM logins WHERE logId = ?', [logId]);
-    connection.release();
-    return result[0].count > 0;
+//Expresiones regulares utilizadas:
+
+const nameRegex = /^[a-zA-Z\s]+$/;
+const ciRegex = /^\d{6,8}$/;
+
+// Funciones para validar los datos pasados por parametro
+
+function avoidSQLInjection(string) {
+    if (string.includes('-')) {
+        return false;
+    }else if (string.toLowerCase().includes('drop')) {
+        return false;
+    }else if (string.toLowerCase().includes('table')) {
+        return false;
+    }else{
+        return true;
+    }  
 }
 
-//Agregar funcionario.
+async function logIsValid(logId) {  // Esta función debe ser asincrónica ya que debe hacer una consulta a la tabla de login
+    if (avoidSQLInjection(logId)){
+        const connection = await pool.getConnection();
+        const [result] = await connection.execute('SELECT COUNT(*) AS count FROM logins WHERE logId = ?', [logId]);
+        connection.release();
+        return result[0].count === 0;
+    }
+    return true;
+}
+
+function isValidName(name) {
+    return nameRegex.test(name);
+}
+
+function isValidCI(ci) {
+    return ciRegex.test(ci);
+}
+
+// Log in
+
+//Registrar a un funcionario.
 export const addFuncionario = async (req, res)=>{
     try {
         const { ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId } = req.body;
 
-        // Verificamos que se proporcionen los datos necesarios
+        // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
+
         if (!ci || !nombre || !apellido || !fch_nacimiento || !direccion || !telefono || !email || !logId) {
             return res.status(400).json({ error: 'Se requieren todos los campos para agregar un funcionario.' });
         }
 
-        if (typeof nombre === 'string' && value.trim().length > 0) {
-            return res.status(400).json({ error: 'El logId proporcionado no existe en la tabla logins.' });
+        if (typeof nombre === 'string' && nombre.trim().length === 0) {
+            return res.status(400).json({ error: 'El nombre no puede ser una cadena vacía.' });
         }
 
         // Validación específica para la clave foránea logId
-        const logValido = await isLogIdValid(logId);
-        if (!isLogIdValid) {
+        const logValido = await logIsValid(logId) ;
+        if (!logValido) {
             return res.status(400).json({ error: 'El logId proporcionado no existe en la tabla logins.' });
         }
 
-        const isLogIdValid = await isLogIdValid(logId);
-        if (!isLogIdValid) {
-            return res.status(400).json({ error: 'El logId proporcionado no existe en la tabla logins.' });
+        // Validación específica del nombre
+        if (!isValidName(nombre)) {
+            return res.status(400).json({ error: 'Se requiere que el nombre no sea una cadena vacía o contener caracteres no permitidos.' });
         }
+
+        // Validación específica del ci
+        if (!isValidCI(ci)) {
+            return res.status(400).json({ error: 'Se requiere que la cédula sea un número de 6, 7 u 8 dígitos.' });
+        }
+        
+
+        // Validación específica del apellido
+
+        // Validación específica de la fecha de nacimineto
+
+        // Validación específica de la dirección 
+
+        // Validación específica del telefono
+
+        // Validación específica del email
+
         // Otros chequeos o validaciones según tus necesidades
 
         // Obtenemos una conexión del pool
@@ -71,6 +120,6 @@ export const addFuncionario = async (req, res)=>{
 
     } catch (error) {
         console.error('Error al agregar el funcionario:', error);
-        res.status(500).json({ error: 'Error interno del servidor.' });
+        res.status(500).json({ error: 'Error interno del servidor.aasa' });
     }
 }

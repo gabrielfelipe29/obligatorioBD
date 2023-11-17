@@ -85,4 +85,6 @@ select * from funcionarios;
 
 select fch_agenda from agenda where ci = 1234567;
 
-insert into agenda ()
+insert into agenda (ci, fch_agenda) values (12314324, '2023-01-15');
+
+drop table agenda

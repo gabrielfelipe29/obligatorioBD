@@ -56,6 +56,12 @@ function onlyNumbers(s) {
     return /^\d+$/.test(s);
 }
 
+function dateValidator(fecha) {
+    // Expresión regular para el formato "aaaa-mm-dd"
+    var regex = /^\d{4}-\d{2}-\d{2}$/;
+    return regex.test(fecha);
+}
+
 
 // Obtener fecha de una persona
 export const addFecha = async (req, res)=>{
@@ -113,11 +119,15 @@ export const getFecha = async (req, res)=>{
             return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
         }
 
+        if(!dateValidator(fecha)){
+            return res.status(400).json({ error: 'El formato de la fecha es incorrecto.' });
+        }
+
         // Obtenemos una conexión del pool
         const connection = await pool.getConnection();
 
         // Realizamos la inserción del nuevo funcionario
-        const [result] = await connection.execute('INSERT INTO agenda FROM agenda WHERE ci = ?;', [ci]);
+        const [result] = await connection.execute('INSERT INTO agenda (ci, fch_agenda) VALUES (? , ?)', [ci, fecha]);
 
         // Liberamos la conexión
         connection.release();

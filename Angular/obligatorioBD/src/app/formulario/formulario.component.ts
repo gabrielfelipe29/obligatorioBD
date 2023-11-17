@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormularioService } from '../formulario.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-formulario',
@@ -15,9 +17,8 @@ export class FormularioComponent implements OnInit {
 
   }
   date = new Date;
-  title = 'Angular Form Validation Tutorial';
   angForm: FormGroup;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private service: FormularioService, private router: Router) {
     this.createForm();
   }
   createForm() {
@@ -50,5 +51,33 @@ export class FormularioComponent implements OnInit {
     }
     controlFchVen.updateValueAndValidity();
     controlComprobante.updateValueAndValidity();
+  }
+
+  volver() {
+    this.router.navigate(['/menu']);
+  }
+
+  enviarFormulario() {
+    const formulario = { formulario: this.angForm.value };
+    this.service.enviar(formulario).subscribe(
+      data => {
+        if (data) {
+          //mostrar msg de exito
+          alert("Formulario enviado con éxito.");
+
+        }
+      },
+      error => {
+        //cambiar los msg de error en base a back
+        if (error.status == 401) {
+          alert("Error, contraseña incorrecta o usuario incorrecto")
+        }
+
+        if (error.status == 400) {
+          alert("Error en el formato de los datos")
+        }
+        console.log(error);
+      });
+
   }
 }

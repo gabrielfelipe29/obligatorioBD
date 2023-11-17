@@ -88,12 +88,19 @@
             </div>
         </div>
         <br>
-        <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-success">
-            Guardar
-        </button>
+        <div id="botones">
+            <button type="submit" class="btn btn-secondary" (click)="volver()">
+                Volver
+            </button>
+            <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-primary"
+                (click)="enviarFormulario()">
+                Guardar
+            </button>
+        </div>
+
+
+
+
     </form>
-    <p>Form value: {{ angForm.value | json }}</p>
-    <p>Form pristine: {{ angForm.pristine }}</p>
-    <p>Form invalid: {{ angForm.invalid }}</p>
-    <p>Form status: {{ angForm.status | json }}</p>
+
 </div>

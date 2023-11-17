@@ -1,1 +1,33 @@
-<p>listado-gente works!</p>
+<div class="container">
+    <h1>
+        LISTADO GENTE
+    </h1>
+    <form novalidate>
+        <div class="form-group">
+            <label>Personas que no cargaron su comprobante:</label>
+            <div>
+
+                <textarea id="email" [(ngModel)]="email" [ngModelOptions]="{standalone: true}" readonly rows="10"
+                    cols="1"></textarea>
+                <textarea [(ngModel)]="datos" [ngModelOptions]="{standalone: true}" readonly rows="10"
+                    cols="1"></textarea>
+            </div>
+        </div>
+        <br>
+        <div class="form-group" *ngIf="personas.length>0">
+            <label>Actualizado el {{date}}</label>
+        </div>
+        <br>
+        <div class="botones">
+            <button type="submit" (click)="volver()" class="btn btn-secondary">
+                Volver
+            </button>
+            <button type="submit" (click)="copiarTexto()" class="btn btn-primary">
+                Copiar Emails
+            </button>
+            <button type="submit" (click)="listarGente()" class="btn btn-primary">
+                Buscar Datos
+            </button>
+        </div>
+    </form>
+</div>

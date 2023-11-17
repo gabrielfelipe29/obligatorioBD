@@ -15,7 +15,7 @@ const routes: Routes = [
   { path: 'sacarfecha', component: SacarFechaComponent },
   { path: 'formulario', component: FormularioComponent },
   { path: 'listado', component: ListadoGenteComponent },
-  { path: 'cambiarperiodo', component: CambioFechaPeriodoComponent }
+  { path: 'periodo', component: CambioFechaPeriodoComponent }
 ];
 
 @NgModule({

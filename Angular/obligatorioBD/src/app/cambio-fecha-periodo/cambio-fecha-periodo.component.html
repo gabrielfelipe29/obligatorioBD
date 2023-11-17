@@ -6,7 +6,7 @@
     </h1>
     <form [formGroup]="angForm" novalidate>
         <div class="form-group">
-            <label>Fecha Inicio Periodo:</label>
+            <label>Fecha Inicio Período:</label>
             <input class="form-control" formControlName="fchIn" min="{{date | date:'yyyy-MM-dd'}}" type="date">
         </div>
 
@@ -16,12 +16,12 @@
                 Fecha de inicio de período no puede estar vacía.
             </div>
             <div [hidden]="!angForm.controls['fchIn'].errors.fechasInvalidas">
-                Fecha de inicio de período no puede ser después a la fecha de inicio de periodo.
+                Fecha de inicio de período no puede ser después a la fecha de inicio de período.
             </div>
         </div>
 
         <div class="form-group">
-            <label>Fecha Fin Periodo:</label>
+            <label>Fecha Fin Período:</label>
             <input class="form-control" formControlName="fchVen" min="{{date | date:'yyyy-MM-dd'}}" type="date">
         </div>
 
@@ -31,17 +31,22 @@
                 Fecha de fin de período no puede estar vacía.
             </div>
             <div [hidden]="!angForm.controls['fchVen'].errors.fechasInvalidas">
-                Fecha de fin de periodo no puede ser anterior a la fecha de inicio de periodo
+                Fecha de fin de per[iodo no puede ser anterior a la fecha de inicio de período.
             </div>
         </div>
 
-        <!-- <div class="error" *ngIf="angForm?.errors?.['fechasInvalidas']">
-            Fecha de fin de periodo no puede ser anterior a la fecha de inicio de periodo
-        </div> -->
+
 
         <br>
-        <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-success">
-            Guardar
-        </button>
+        <div id="botones">
+
+            <button type="submit" (click)="volver()" class="btn btn-secondary">
+                Volver
+            </button>
+
+            <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-primary">
+                Guardar
+            </button>
+        </div>
     </form>
 </div>

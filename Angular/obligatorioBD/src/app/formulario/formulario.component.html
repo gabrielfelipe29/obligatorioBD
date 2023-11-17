@@ -89,10 +89,10 @@
         </div>
         <br>
         <div id="botones">
-            <button type="submit" class="btn btn-success" (click)="volver()">
+            <button type="submit" class="btn btn-secondary" (click)="volver()">
                 Volver
             </button>
-            <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-success"
+            <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-primary"
                 (click)="enviarFormulario()">
                 Guardar
             </button>

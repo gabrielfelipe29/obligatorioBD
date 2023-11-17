@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControlOptions } from '@angular/forms';
-import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms"
+import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { PeriodoService } from '../periodo.service';
+import { Router } from '@angular/router';
+
 
 
 
@@ -47,7 +50,7 @@ export class CambioFechaPeriodoComponent {
 
   date = new Date;
   angForm: FormGroup;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private service: PeriodoService, private router: Router) {
     this.createForm();
   }
 
@@ -58,4 +61,30 @@ export class CambioFechaPeriodoComponent {
     }, { validators: dateValidator } as AbstractControlOptions);
   }
 
+  volver() {
+    this.router.navigate(['/menu']);
+  }
+
+  enviarPeriodo() {
+    const periodo = { periodo: this.angForm.value };
+    this.service.actualizarPeriodo(periodo).subscribe(
+      data => {
+        if (data) {
+          //mostrar listado
+
+        }
+      },
+      error => {
+        //cambiar los msg de error en base a back
+        if (error.status == 401) {
+          alert("Error, contraseña incorrecta o usuario incorrecto")
+        }
+
+        if (error.status == 400) {
+          alert("Error en el formato de los datos")
+        }
+        console.log(error);
+      });
+  }
 }
+

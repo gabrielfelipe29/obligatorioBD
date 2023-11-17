@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { CookieService } from "ngx-cookie-service";
+import { NgForm } from '@angular/forms';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +12,7 @@ export class LoginService {
 
   login(user: any): Observable<any> {
     
-    return this.http.post("http://localhost:3000/user/login", user);
+    return this.http.post("http://localhost:3000/login", user);
   }
 
   setToken(token: string) {

@@ -1,1 +1,52 @@
-<p>cambio-fecha-periodo works!</p>
+<!-- app.component.html -->
+
+<div class="container">
+    <h1>
+        CAMBIO FECHA PERÍODO
+    </h1>
+    <form [formGroup]="angForm" novalidate>
+        <div class="form-group">
+            <label>Fecha Inicio Período:</label>
+            <input class="form-control" formControlName="fchIn" min="{{date | date:'yyyy-MM-dd'}}" type="date">
+        </div>
+
+        <div class="error" *ngIf="angForm.controls['fchIn'].invalid && (angForm.controls['fchIn'].dirty 
+            || angForm.controls['fchIn'].touched)">
+            <div [hidden]="!angForm.controls['fchIn'].errors.required">
+                Fecha de inicio de período no puede estar vacía.
+            </div>
+            <div [hidden]="!angForm.controls['fchIn'].errors.fechasInvalidas">
+                Fecha de inicio de período no puede ser después a la fecha de inicio de período.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Fecha Fin Período:</label>
+            <input class="form-control" formControlName="fchVen" min="{{date | date:'yyyy-MM-dd'}}" type="date">
+        </div>
+
+        <div class="error" *ngIf="angForm.controls['fchVen'].invalid && (angForm.controls['fchVen'].dirty 
+            || angForm.controls['fchVen'].touched)">
+            <div [hidden]="!angForm.controls['fchVen'].errors.required">
+                Fecha de fin de período no puede estar vacía.
+            </div>
+            <div [hidden]="!angForm.controls['fchVen'].errors.fechasInvalidas">
+                Fecha de fin de per[iodo no puede ser anterior a la fecha de inicio de período.
+            </div>
+        </div>
+
+
+
+        <br>
+        <div id="botones">
+
+            <button type="submit" (click)="volver()" class="btn btn-secondary">
+                Volver
+            </button>
+
+            <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-primary">
+                Guardar
+            </button>
+        </div>
+    </form>
+</div>

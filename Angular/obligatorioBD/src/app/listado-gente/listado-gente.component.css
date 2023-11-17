@@ -1,0 +1,16 @@
+textarea {
+  width: 80%;
+  height: 50%;
+}
+
+.botones {
+  display: flex;
+}
+
+button {
+  margin-right: 10px;
+}
+
+#email {
+  display: none;
+}

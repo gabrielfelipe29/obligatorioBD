@@ -53,3 +53,13 @@ create table periodos_actualizacion(
     fch_fin date,
     primary key (año, semestre, fch_inicio, fch_fin)
 );
+
+
+-- Tabla de roles
+create table rol
+(
+    logId varchar(50),
+    rol   varchar(50) check (rol in ('admin', 'funcionario')),
+    primary key (logId),
+    foreign key (logId) references logins(logId)
+);

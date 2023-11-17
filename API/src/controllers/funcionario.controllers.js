@@ -1,27 +1,30 @@
 import pool from "../database/conection.js";
+import { isNullOrEmpty } from "../metodos.js";
 
 //Obtener todos los funcionarios.
-export const getFuncionarios = async (req, res)=>{
-    try {
-        // Obtenemos una conexión del pool
-        const connection = await pool.getConnection();
+export const getFuncionarios = async (req, res) => {
+  try {
+    // Obtenemos una conexión del pool
+    const connection = await pool.getConnection();
 
-        // Realizamos la consulta
-        const [rows, fields] = await connection.execute('SELECT * FROM funcionarios');
+    // Realizamos la consulta
+    const [rows, fields] = await connection.execute(
+      "SELECT * FROM funcionarios"
+    );
 
-        // Liberamos la conexión
-        connection.release();
+    // Liberamos la conexión
+    connection.release();
 
-        // Hacemos algo con los resultados (en este caso, los mostramos en la consola)
-        console.log(fields);
-        res.json(rows);
-        res.send();
-    } catch (error) {
-        res.status(500).json({"message": error.message});
-        res.send();
-        console.error('Error al ejecutar la consulta:', error);
-    }
-}
+    // Hacemos algo con los resultados (en este caso, los mostramos en la consola)
+    console.log(fields);
+    res.json(rows);
+    res.send();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+    res.send();
+    console.error("Error al ejecutar la consulta:", error);
+  }
+};
 
 //Expresiones regulares utilizadas:
 
@@ -45,14 +48,18 @@ function avoidSQLInjection(string) {
         return true;        
 }
 
-async function logIsValid(logId) {  // Esta función debe ser asincrónica ya que debe hacer una consulta a la tabla de login
-    if (avoidSQLInjection(logId)){
-        const connection = await pool.getConnection();
-        const [result] = await connection.execute('SELECT COUNT(*) AS count FROM logins WHERE logId = ?', [logId]);
-        connection.release();
-        return result[0].count === 0;
-    }
-    return true;
+async function logIsValid(logId) {
+  // Esta función debe ser asincrónica ya que debe hacer una consulta a la tabla de login
+  if (avoidSQLInjection(logId)) {
+    const connection = await pool.getConnection();
+    const [result] = await connection.execute(
+      "SELECT COUNT(*) AS count FROM logins WHERE logId = ?",
+      [logId]
+    );
+    connection.release();
+    return result[0].count === 0;
+  }
+  return true;
 }
 
 function onlyNumbers(s) {
@@ -60,11 +67,11 @@ function onlyNumbers(s) {
 }
 
 function isValidName(name) {
-    return nameRegex.test(name);
+  return nameRegex.test(name);
 }
 
 function isValidCI(ci) {
-    return ciRegex.test(ci);
+  return ciRegex.test(ci);
 }
 
 function CorreoUCU(email) {
@@ -87,6 +94,53 @@ function validNumber(numero) {
 
 
 // Log in
+export const login = async (req, res) => {
+  try {
+    let userid = req.body.logId;
+    let contraseña = req.body.password;
+    // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
+
+    if (isNullOrEmpty(userid) || isNullOrEmpty(contraseña)) {
+      return res.status(400).json({
+        error: "Se requieren todos los campos para loguearse.",
+      });
+    }
+
+    const connection = await pool.getConnection();
+
+    // Realizamos la inserción del nuevo funcionario
+
+    const [result] = await connection.query(
+      "select r.rol from rol r left join logins l on l.logId = r.logId where l.logId=? and l.password=?",
+      [userid, contraseña]
+    );
+
+    //FALTA MANDAR EL TOKEN
+
+    if (result[0]) {
+      res.status(200).json({
+        token: "abc",
+        tipo: result[0].rol,
+      });
+      //existe
+    } else {
+      //no existe
+      res.status(400).json({
+        error: "Usuario no existe",
+      });
+    }
+
+    //ver si el result es verdadero o no
+
+    // Liberamos la conexión
+    connection.release();
+
+    // Respondemos con el token y el rol que es
+  } catch (error) {
+    console.error("Error al hacer login:", error);
+    res.status(500).json({ error: "Error interno del servidor.aasa" });
+  }
+};
 
 export function add(req, res){
     console.log(req)
@@ -96,7 +150,7 @@ export function add(req, res){
 export const addFuncionario = async (req, res)=>{
     try {
 
-        // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
+    // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
 
         if (!req.body.ci || !req.body.nombre || !req.body.apellido || !req.body.fch_nacimiento || !req.body.direccion || !req.body.telefono || !req.body.email || !req.body.logId) {
             return res.status(400).json({ error: 'Se requieren todos los campos para agregar un funcionario.' });
@@ -167,4 +221,4 @@ export const addFuncionario = async (req, res)=>{
         console.error('Error al agregar el funcionario:', error);
         res.status(500).json({ error: 'Error interno del servidor.' });
     }
-}
+};

@@ -3,7 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import FuncionariosRouter from "./routes/funcionarios.routes.js";
 import LoginRouter from "./routes/logins.routes.js";
-
+import AvisosRouter from "./routes/avisos.routes.js";
 //jwt
 //abc
 //Inicialización
@@ -23,6 +23,7 @@ app.use(morgan('dev'));
 // Rutas
 app.use(FuncionariosRouter);
 app.use(LoginRouter);
+app.use(AvisosRouter);  
 
 // Debuging
 process.env.NODE_ENV = "development";

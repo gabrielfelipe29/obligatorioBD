@@ -33,34 +33,9 @@ const ciRegex = /^\d{6,8}$/;
 
 // Funciones para validar los datos pasados por parametro
 
-function avoidSQLInjection(string) {
-    if(!onlyNumbers(string)){
-        if (string.includes('--')) {
-            return false;
-        }else if (string.toLowerCase().includes('drop')) {
-            return false;
-        }else if (string.toLowerCase().includes('table')) {
-            return false;
-        }else{
-            return true;
-        }  
-    }else 
-        return true;        
-}
 
-async function logIsValid(logId) {
-  // Esta función debe ser asincrónica ya que debe hacer una consulta a la tabla de login
-  if (avoidSQLInjection(logId)) {
-    const connection = await pool.getConnection();
-    const [result] = await connection.execute(
-      "SELECT COUNT(*) AS count FROM logins WHERE logId = ?",
-      [logId]
-    );
-    connection.release();
-    return result[0].count === 0;
-  }
-  return true;
-}
+
+
 
 function onlyNumbers(s) {
     return /^\d+$/.test(s);

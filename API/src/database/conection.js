@@ -1,5 +1,8 @@
 import { createPool } from 'mysql2';
 import mysql2 from 'mysql2/promise';
+import nodemailer from 'nodemailer';
+
+
 
 const pool = mysql2.createPool({
     host: 'localhost',
@@ -8,6 +11,7 @@ const pool = mysql2.createPool({
     password: 'bernardo',
     database: 'obligatorio'
 });
+
 
 export default pool;
 

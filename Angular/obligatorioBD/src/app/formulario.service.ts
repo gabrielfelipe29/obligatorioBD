@@ -14,4 +14,8 @@ export class FormularioService {
     return this.http.post("http://localhost:3000/", formulario);
   }
 
+  obtenerPeriodo(): Observable<any> {
+    return this.http.get("http://localhost:3000/");
+  }
+  
 }

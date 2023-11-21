@@ -58,6 +58,7 @@ export class FormularioComponent implements OnInit {
   }
 
   enviarFormulario() {
+    //volver a verificar el periodo?
     const formulario = { formulario: this.angForm.value };
     this.service.enviar(formulario).subscribe(
       data => {

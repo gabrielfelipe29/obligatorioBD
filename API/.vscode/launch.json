@@ -8,7 +8,7 @@
         "program": "${workspaceFolder}/src/index.js",
         "runtimeExecutable": "nodemon",
         "restart": true,
-        "console": "integratedTerminal"
+        "console": "internalConsole"
       }
     ]
   }

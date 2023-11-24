@@ -3,7 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import FuncionariosRouter from "./routes/funcionarios.routes.js";
 import LoginRouter from "./routes/logins.routes.js";
-
+import AvisosRouter from "./routes/agenda.routes.js" // tiene q ser avisos.routes.
 //jwt
 //abc
 //Inicialización
@@ -16,11 +16,14 @@ app.set("PORT", 3005);
 //Middlewares
 app.use(cors());
 app.use(express.json());
-app.use(morgan("dev"));
+app.use(morgan('dev'));
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: true }));
 
 // Rutas
 app.use(FuncionariosRouter);
 app.use(LoginRouter);
+app.use(AvisosRouter);  
 
 // Debuging
 process.env.NODE_ENV = "development";

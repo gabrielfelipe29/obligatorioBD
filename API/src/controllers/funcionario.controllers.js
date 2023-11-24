@@ -1,5 +1,61 @@
 import pool from "../database/conection.js";
-import { isNullOrEmpty } from "../metodos.js";
+
+//Expresiones regulares utilizadas:
+
+const nameRegex = /^[a-zA-Z\s]+$/;
+const ciRegex = /^\d{6,8}$/;
+
+
+// Funciones para validar los datos pasados por parametro
+
+function onlyNumbers(s) {
+  return /^\d+$/.test(s);
+}
+
+function isValidName(name) {
+return nameRegex.test(name);
+}
+
+function isValidCI(ci) {
+return ciRegex.test(ci);
+}
+
+function CorreoUCU(email) {
+  // Expresión regular para verificar si el correo termina en "@ucu.edu.uy"
+  var regex = /^[a-zA-Z0-9._-]+@ucu\.edu\.uy$/;
+  return regex.test(email);
+}
+
+function validDate(fecha) {
+  // Expresión regular para el formato "aaaa-mm-dd"
+  var regex = /^\d{4}-\d{2}-\d{2}$/;
+  return regex.test(fecha);
+}
+
+function validNumber(numero) {
+  // Expresión regular para verificar que el número tiene exactamente 7 dígitos
+  var regex = /^\d{7}$/;
+  return regex.test(numero);
+}
+
+function isNullOrEmpty(value) {
+  return value === null || value === undefined || value === "";
+}
+
+function avoidSQLInjection(string) {
+  if(!onlyNumbers(string)){
+      if (string.includes('--')) {
+          return false;
+      }else if (string.toLowerCase().includes('drop')) {
+          return false;
+      }else if (string.toLowerCase().includes('table')) {
+          return false;
+      }else{
+          return true;
+      }  
+  }else 
+      return true;        
+}
 
 //Obtener todos los funcionarios.
 export const getFuncionarios = async (req, res) => {
@@ -26,46 +82,7 @@ export const getFuncionarios = async (req, res) => {
   }
 };
 
-//Expresiones regulares utilizadas:
 
-const nameRegex = /^[a-zA-Z\s]+$/;
-const ciRegex = /^\d{6,8}$/;
-
-// Funciones para validar los datos pasados por parametro
-
-
-
-
-
-function onlyNumbers(s) {
-    return /^\d+$/.test(s);
-}
-
-function isValidName(name) {
-  return nameRegex.test(name);
-}
-
-function isValidCI(ci) {
-  return ciRegex.test(ci);
-}
-
-function CorreoUCU(email) {
-    // Expresión regular para verificar si el correo termina en "@ucu.edu.uy"
-    var regex = /^[a-zA-Z0-9._-]+@ucu\.edu\.uy$/;
-    return regex.test(email);
-}
-
-function validDate(fecha) {
-    // Expresión regular para el formato "aaaa-mm-dd"
-    var regex = /^\d{4}-\d{2}-\d{2}$/;
-    return regex.test(fecha);
-}
-
-function validNumber(numero) {
-    // Expresión regular para verificar que el número tiene exactamente 7 dígitos
-    var regex = /^\d{7}$/;
-    return regex.test(numero);
-}
 
 
 // Log in

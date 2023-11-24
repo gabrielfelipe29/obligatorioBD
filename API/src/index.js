@@ -3,7 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import FuncionariosRouter from "./routes/funcionarios.routes.js";
 import LoginRouter from "./routes/logins.routes.js";
-import AvisosRouter from "./routes/avisos.routes.js";
+import AvisosRouter from "./routes/agenda.routes.js" // tiene q ser avisos.routes.
 //jwt
 //abc
 //Inicialización

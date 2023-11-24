@@ -1,21 +1,10 @@
+import pool from "./database/conection";
+
 export function isNullOrEmpty(value) {
   return value === null || value === undefined || value === "";
 }
 
-export function avoidSQLInjection(string) {
-  if(!onlyNumbers(string)){
-      if (string.includes('--')) {
-          return false;
-      }else if (string.toLowerCase().includes('drop')) {
-          return false;
-      }else if (string.toLowerCase().includes('table')) {
-          return false;
-      }else{
-          return true;
-      }  
-  }else 
-      return true;        
-}
+
 
 // Métodos asíncronos (consultas a base de datos)
 
@@ -45,4 +34,25 @@ export async function getFuncionariosUcu(logId) {
     return result[0].count === 0;
   }
   return true;
+}
+
+export async function encontrarFuncionariosNoRegistrados() {
+  const query = `
+    SELECT *
+    FROM funcionariosUcu
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM funcionarios
+      WHERE funcionarios.ci = funcionariosUcu.ci
+    );
+  `;
+
+  pool.query(query, (error, results) => {
+    if (error) {
+      console.error('Error al ejecutar la consulta:', error);
+      return;
+    }
+
+    console.log('Funcionarios no registrados:', results);
+  });
 }

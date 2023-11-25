@@ -101,7 +101,7 @@ export const putCarnet = async (req, res)=>{
 
         // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
 
-        if(!avoidSQLInjection(req.body.ci) && !avoidSQLInjection(req.body.fch_emision) && !avoidSQLInjection(req.body.vencimiento) && !avoidSQLInjection(req.body.comprobante)){
+        if(!avoidSQLInjection(req.body.ci) && !avoidSQLInjection(req.body.fch_emision) && !avoidSQLInjection(req.body.fch_vencimiento) && !avoidSQLInjection(req.body.comprobante)){
             return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
         }
         
@@ -114,7 +114,7 @@ export const putCarnet = async (req, res)=>{
         const connection = await pool.getConnection();
 
         // Realizamos la inserción del nuevo funcionario
-        const [result] = await connection.execute('SELECT fch_agenda FROM carnet_salud WHERE ci = ?;', [req.body.ci]);
+        const [result] = await connection.execute('UPDATE carnet_salud SET fch_emision = ?, fch_vencimiento = ?, comprobante = ? WHERE ci = ?', [req.body.fch_emision, req.body.fch_vencimiento, req.body.comprobante, req.body.ci]);
 
         // Liberamos la conexión
         connection.release();

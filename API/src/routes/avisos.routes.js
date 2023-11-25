@@ -45,6 +45,7 @@ cron.schedule('0 7 * * *', () => {
     notregistred.forEach(funcionario => {
         sendMail(funcionario.email, "Debe registrarse en la aplicación", "Es importante que se registre")
     });
+    
 });
  
 

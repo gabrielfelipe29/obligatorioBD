@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FormularioService } from '../formulario.service';
 import { Router } from '@angular/router';
@@ -9,18 +9,36 @@ import { Router } from '@angular/router';
   styleUrls: ['./formulario.component.css']
 })
 export class FormularioComponent implements OnInit {
-
+  @Input() registrar: boolean = false;
+  header: String = "FORMULARIO ACTUALIZACIÓN DE DATOS";
   //CI, nombre, fecha nacimiento, tiene carne de salud (chkbtn), fchvnc carne, comprobante (pdf o jpg)
   escondido = true;
-  ngOnInit(): void {
-    //limpiar campos?
 
-  }
   date = new Date;
   angForm: FormGroup;
   constructor(private fb: FormBuilder, private service: FormularioService, private router: Router) {
     this.createForm();
   }
+
+  ngOnInit(): void {
+    //limpiar campos?
+    if (this.registrar) {
+      const controlUsername = this.angForm.get('username');
+      const controlPassword = this.angForm.get('password');
+      const controlDomicilio = this.angForm.get('domicilio');
+      const controlEmail = this.angForm.get('email');
+      const controlTel = this.angForm.get('tel');
+
+      controlUsername.setValidators(Validators.required);
+      controlPassword.setValidators(Validators.required);
+      controlDomicilio.setValidators(Validators.required);
+      controlEmail.setValidators([Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$')]);
+      controlTel.setValidators([Validators.required, Validators.minLength(8), Validators.pattern('^[0-9]*$')]);
+      this.header = "REGISTRARSE"
+    }
+  }
+
+
   createForm() {
     this.angForm = this.fb.group({
       ci: ['', [Validators.required, Validators.minLength(7), Validators.pattern('^[0-9]*$')]],
@@ -28,7 +46,12 @@ export class FormularioComponent implements OnInit {
       fchNac: ['', [Validators.required]],
       carne: ['', Validators.required],
       fchVen: '',
-      comprobante: ''
+      comprobante: '',
+      username: '',//required
+      password: '',//required
+      domicilio: '',//required
+      email: '',//required, pattern
+      tel: ''//required, pattern, lenght
     });
   }
 
@@ -54,31 +77,58 @@ export class FormularioComponent implements OnInit {
   }
 
   volver() {
-    this.router.navigate(['/menu']);
+    if (this.registrar) {
+      this.router.navigate(['/login'])
+    } else {
+      this.router.navigate(['/menu']);
+    }
   }
 
   enviarFormulario() {
     //volver a verificar el periodo?
     const formulario = { formulario: this.angForm.value };
-    this.service.enviar(formulario).subscribe(
-      data => {
-        if (data) {
-          //mostrar msg de exito
-          alert("Formulario enviado con éxito.");
+    console.log(formulario);
+    if (this.registrar) {
+      this.service.registar(formulario).subscribe(
+        data => {
+          if (data) {
+            //mostrar msg de exito
+            alert("Formulario enviado con éxito.");
+          }
+        },
+        error => {
+          //cambiar los msg de error en base a back
+          if (error.status == 401) {
+            alert("Error, contraseña incorrecta o usuario incorrecto")
+          }
 
-        }
-      },
-      error => {
-        //cambiar los msg de error en base a back
-        if (error.status == 401) {
-          alert("Error, contraseña incorrecta o usuario incorrecto")
-        }
+          if (error.status == 400) {
+            alert("Error en el formato de los datos")
+          }
+          console.log(error);
+        });
+    } else {
+      this.service.enviar(formulario).subscribe(
+        data => {
+          if (data) {
+            //mostrar msg de exito
+            alert("Formulario enviado con éxito.");
 
-        if (error.status == 400) {
-          alert("Error en el formato de los datos")
-        }
-        console.log(error);
-      });
+          }
+        },
+        error => {
+          //cambiar los msg de error en base a back
+          if (error.status == 401) {
+            alert("Error, contraseña incorrecta o usuario incorrecto")
+          }
+
+          if (error.status == 400) {
+            alert("Error en el formato de los datos")
+          }
+          console.log(error);
+        });
+    }
+
 
   }
 }

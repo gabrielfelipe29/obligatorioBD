@@ -1,13 +1,13 @@
 import pool from "../database/conection.js";
 
 //Obtener todos los carnets.
-export const getAgenda = async (req, res)=>{
+export const getCarnets = async (req, res)=>{
     try {
         // Obtenemos una conexión del pool
         const connection = await pool.getConnection();
 
         // Realizamos la consulta
-        const [rows, fields] = await connection.execute('SELECT * FROM agenda');
+        const [rows, fields] = await connection.execute('SELECT * FROM carnet_salud');
 
         // Liberamos la conexión
         connection.release();
@@ -64,21 +64,58 @@ function dateValidator(fecha) {
 
 
 // Obtener carnet de una persona
-export const addFecha = async (req, res)=>{
+export const getCarnet = async (req, res)=>{
     try {
 
         // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
 
-        if (!req.body.ci) {
-            return res.status(400).json({ error: 'Se requieren todos los campos para agregar un funcionario.'});
+        if(!avoidSQLInjection(req.body.ci)){
+            return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
         }
 
         if (onlyNumbers(req.body.ci)) {
             return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
         }
 
+        // Obtenemos una conexión del pool
+        const connection = await pool.getConnection();
+
+        // Realizamos la inserción del nuevo funcionario
+        const [result] = await connection.execute('SELECT fch_agenda FROM carnet_salud WHERE ci = ?;', [req.body.ci]);
+
+        // Liberamos la conexión
+        connection.release();
+
+        // Respondemos con el resultado de la inserción
+        res.status(201).json({ id: result.insertId, mensaje: 'Carnet obtenido con exito.' });
+
+    } catch (error) {
+        console.error('Error al obtener el carnet: ', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+}
+
+// Actualizar carnet 
+
+
+
+
+
+
+/*
+    Se tendría que considerar el hecho de crear tablas para el login
+// Obtener carnet de una persona
+export const addFecha = async (req, res)=>{
+    try {
+
+        // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
+
         if(!avoidSQLInjection(req.body.ci)){
             return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
+        }
+
+        if (onlyNumbers(req.body.ci)) {
+            return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
         }
 
         // Obtenemos una conexión del pool
@@ -98,15 +135,5 @@ export const addFecha = async (req, res)=>{
         res.status(500).json({ error: 'Error interno del servidor.' });
     }
 }
-
-// Agendar una fecha 
-
-
-
-
-
-
-/*
-    Se tendría que considerar el hecho de crear tablas para el login
 
 */

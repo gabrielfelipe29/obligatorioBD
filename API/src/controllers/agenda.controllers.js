@@ -71,7 +71,7 @@ function dateValidator(fecha) {
 
 
 // Obtener fecha de una persona
-export const addFecha = async (req, res)=>{
+export const getFecha = async (req, res)=>{
     try {
 
         // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
@@ -107,11 +107,15 @@ export const addFecha = async (req, res)=>{
 }
 
 // Agendar una fecha 
-export const getFecha = async (req, res)=>{
+export const addFecha = async (req, res)=>{
     try {
         const { ci, fecha } = req.body;
 
         // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
+
+        if(!avoidSQLInjection(ci)){
+            return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
+        }
 
         if (!ci || !fecha) {
             return res.status(400).json({ error: 'Se requiere el campo de ci para identificar al empleado.' });
@@ -119,10 +123,6 @@ export const getFecha = async (req, res)=>{
 
         if (onlyNumbers(ci)) {
             return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
-        }
-
-        if(!avoidSQLInjection(ci)){
-            return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
         }
 
         if(!dateValidator(fecha)){

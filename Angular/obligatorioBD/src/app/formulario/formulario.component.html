@@ -2,7 +2,7 @@
 
 <div class="container">
     <h1>
-        FORMULARIO ACTUALIZACIÓN DE DATOS
+        {{header}}
     </h1>
     <form [formGroup]="angForm" novalidate>
         <div class="form-group">
@@ -35,6 +35,79 @@
                 Nombre no puede estar vacío.
             </div>
         </div>
+        <!-- REGISTRARSE -->
+        <div *ngIf="registrar" class="form-group">
+            <label>Nombre de usuario:</label>
+            <input class="form-control" formControlName="username" type="text">
+        </div>
+
+        <div class="error"
+            *ngIf="registrar && angForm.controls['username'].invalid && (angForm.controls['username'].dirty || angForm.controls['username'].touched)">
+            <div [hidden]="!angForm.controls['username'].errors.required">
+                Nombre de usuario no puede estar vacío.
+            </div>
+        </div>
+
+        <div *ngIf="registrar" class="form-group">
+            <label>Contraseña:</label>
+            <input class="form-control" formControlName="password" type="text">
+        </div>
+
+        <div class="error"
+            *ngIf="registrar && angForm.controls['password'].invalid && (angForm.controls['password'].dirty || angForm.controls['password'].touched)">
+            <div [hidden]="!angForm.controls['password'].errors.required">
+                Contraseña no puede estar vacía.
+            </div>
+        </div>
+
+
+        <div *ngIf="registrar" class="form-group">
+            <label>Domicilio:</label>
+            <input class="form-control" formControlName="domicilio" type="text">
+        </div>
+
+        <div class="error"
+            *ngIf="registrar && angForm.controls['domicilio'].invalid && (angForm.controls['domicilio'].dirty || angForm.controls['domicilio'].touched)">
+            <div [hidden]="!angForm.controls['domicilio'].errors.required">
+                Domicilio no puede estar vacío.
+            </div>
+        </div>
+
+        <div *ngIf="registrar" class="form-group">
+            <label>Correo electrónico:</label>
+            <input class="form-control" formControlName="email" type="text">
+        </div>
+
+        <div class="error"
+            *ngIf="registrar && angForm.controls['email'].invalid && (angForm.controls['email'].dirty || angForm.controls['email'].touched)">
+            <div [hidden]="!angForm.controls['email'].errors.required">
+                Correo no puede estar vacío.
+            </div>
+            <div [hidden]="!angForm.controls['email'].errors.pattern">
+                El mail debe tener formato email@dominio.com
+            </div>
+        </div>
+
+        <div *ngIf="registrar" class="form-group">
+            <label>Telefono:</label>
+            <input class="form-control" formControlName="tel" type="text">
+        </div>
+
+        <div class="error"
+            *ngIf="registrar && angForm.controls['tel'].invalid && (angForm.controls['tel'].dirty || angForm.controls['tel'].touched)">
+            <div [hidden]="!angForm.controls['tel'].errors.required">
+                Telefono no puede estar vacío.
+            </div>
+            <div [hidden]="!angForm.controls['tel'].errors.minlength">
+                Largo mínimo de 8 caracteres.
+            </div>
+            <div [hidden]="!angForm.controls['tel'].errors.pattern">
+                Solo se permiten números.
+            </div>
+        </div>
+
+
+        <!-- FIN REGISTRARSE -->
 
 
         <div class="form-group">

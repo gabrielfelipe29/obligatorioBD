@@ -202,6 +202,7 @@ export const addFuncionario = async (req, res)=>{
         // Realizamos la inserción del nuevo funcionario
         const [result1] = await connection.execute('INSERT INTO logins (logId, password) VALUES (?, ?)', [req.body.logId, req.body.contraseña]);
         const [result2] = await connection.execute('INSERT INTO funcionarios (ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.ci, req.body.nombre, req.body.apellido, req.body.fch_nacimiento, req.body.direccion, req.body.telefono, req.body.email, req.body.logId]);
+        const [result3] = await connection.execute('INSERT INTO carnet_salud (ci, fch_emision, fch_vencimiento, comprobante) VALUES (?, ?, ?, ?)',[req.body.ci, req.body.fch_emision, req.body.fch_vencimiento, req.body.comprobante]);
 
         // Liberamos la conexión
         connection.release();

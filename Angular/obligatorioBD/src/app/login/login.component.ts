@@ -11,7 +11,6 @@ export class LoginComponent {
 
   user = ""
   password = ""
-
   userValid: Boolean = true
   passValid: Boolean = true
 
@@ -27,6 +26,7 @@ export class LoginComponent {
           console.log(data)
           this.loginService.setToken(data.token);
           this.loginService.setUserData(this.user, this.password);
+          this.loginService.setTipo(data.tipo)
           this.router.navigateByUrl('/inicio');
         }
         

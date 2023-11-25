@@ -26,6 +26,10 @@ export class LoginService {
     return this.cookies.check("userID")
   }
 
+  setTipo(tipo:string){
+    this.cookies.set("tipo",tipo)
+  }
+  
   setUserData(user: string, password: string) {
     this.cookies.set("userID", user);
     /* this.cookies.set("userPassword", password); */
@@ -33,6 +37,10 @@ export class LoginService {
   getUserData(){
     /* return { user: this.cookies.get("userID"), pass: this.cookies.get("userPassword")} */
     return { user: this.cookies.get("userID")}
+  }
+
+  gettypeuser(){
+    return {tipo: this.cookies.get("type")}
   }
 
   logOut(){

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-sacar-fecha',
   templateUrl: './sacar-fecha.component.html',
@@ -11,7 +11,7 @@ export class SacarFechaComponent {
   formSubmitted: boolean = true;
   mostrar:boolean=false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,private router: Router) {}
 
   ngOnInit(): void {
     this.group = this.fb.group({
@@ -29,5 +29,8 @@ export class SacarFechaComponent {
       // y luego mostrar el mensaje de confirmación
       this.formSubmitted = false;
     }
+  }
+  volver() {
+    this.router.navigate(['/menu']);
   }
 }

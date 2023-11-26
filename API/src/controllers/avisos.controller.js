@@ -43,7 +43,35 @@ export const sendMail = async (req, res) => {
         const result = await transporter.sendMail(mailOptions);
         return result;
 
-
+        try {
+            // Obtenemos una conexión del pool
+            const connection = await pool.getConnection();
+        
+            // Realizamos la consulta
+            const [rows, fields] = await connection.execute(
+                `
+                SELECT *
+                FROM funcionariosUcu
+                WHERE NOT EXISTS (
+                  SELECT 1
+                  FROM funcionarios
+                  WHERE funcionarios.ci = funcionariosUcu.ci
+                );
+              `
+            );
+        
+            // Liberamos la conexión
+            connection.release();
+        
+            // Hacemos algo con los resultados (en este caso, los mostramos en la consola)
+            console.log(fields);
+            res.json(rows);
+            res.send();
+          } catch (error) {
+            res.status(500).json({ message: error.message });
+            res.send();
+            console.error("Error al ejecutar la consulta:", error);
+          }
     } catch (error) {
         console.log (error)
     }

@@ -49,6 +49,52 @@ export const addPeriodo = async (req, res) => {
 }
 
 /*
+// Modificación de un periodo 
+export const putFecha = async (req, res)=>{
+    try {
+
+        // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
+        try {
+            let cedula = parseInt(req.body.ci)
+            if(!avoidSQLInjection(cedula)){
+                return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
+            }   
+
+            if(!dateValidator(req.body.fch_emision)){
+                return res.status(400).json({ error: 'El formato de la fecha es incorrecto.' });
+            }
+            // Obtenemos una conexión del pool
+            const connection = await pool.getConnection();
+
+            // Realizamos la inserción del nuevo funcionario
+            const [result] = await connection.execute('UPDATE periodos_actualizacion SET año = ?, semestre = ?, fch_inicio = ?, fch_fin = ?;', [req.body.año, req.body.fch_vencimiento, req.body.comprobante, req.body.ci]);
+
+            // Liberamos la conexión
+            connection.release();
+
+            // Respondemos con el resultado de la inserción
+            res.status(201).json({mensaje: 'Fecha modificada con éxito.' });
+        
+        } catch (error) {
+            return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
+        }
+        
+
+        if (onlyNumbers(req.body.ci) && onlyNumbers(req.body.comprobante) && dateValidator(req.body.fch_emision)) {
+            return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
+        }
+
+        
+
+    } catch (error) {
+        console.error('Error al obtener el carnet: ', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+}
+
+
+
+/*
 // Obtención del perido de actualización más un booleano que indica si nos encontramos actualmente en el periodo
 export const getPeriodo = async (req, res)=>{
     try {

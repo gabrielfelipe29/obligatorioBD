@@ -3,7 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import FuncionariosRouter from "./routes/funcionarios.routes.js";
 import LoginRouter from "./routes/logins.routes.js";
-//import AvisosRouter from "./routes/avisos.routes.js" // tiene q ser avisos.routes.
+import AvisosRouter from "./routes/avisos.routes.js" // tiene q ser avisos.routes.
 import AgendaRouter from "./routes/agenda.routes.js"
 import PeriodosRouter from "./routes/periodos_actualizacion.routes.js"
 import CarnetRouter from "./routes/carnet_salud.routes.js"

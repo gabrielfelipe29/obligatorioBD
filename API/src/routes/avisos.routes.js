@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { getFuncionariosNoRegistrados } from "../controllers/Avisos.controller.js";
+//import { getFuncionariosNoRegistrados } from "../controllers/Avisos.controller.js";
 const router = Router();
 
 /*
@@ -34,7 +34,7 @@ const router = Router();
 } 
 */
 
-router.get('/avisos/obtenerNoRegistrados', getFuncionariosNoRegistrados);
+//router.get('/avisos/obtenerNoRegistrados', getFuncionariosNoRegistrados);
 
 
 

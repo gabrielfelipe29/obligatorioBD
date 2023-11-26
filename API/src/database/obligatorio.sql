@@ -63,6 +63,7 @@ create table periodos_actualizacion(
     fch_inicio date,
     fch_fin date
 );
+drop table periodos_actualizacion;
 
 -- Tabla rol
 create table rol
@@ -99,8 +100,7 @@ INSERT INTO carnet_salud (ci, fch_emision, fch_vencimiento, comprobante) VALUES
 
 -- Insertar datos en la tabla periodos_actualizacion
 INSERT INTO periodos_actualizacion (año, semestre, fch_inicio, fch_fin) VALUES
-(2023, 1, '2023-01-01', '2023-06-30'),
-(2023, 2, '2023-07-01', '2023-12-31');
+(2023, 1, '2023-01-01', '2023-06-30');
 
 show tables;
 

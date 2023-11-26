@@ -66,23 +66,25 @@ export class CambioFechaPeriodoComponent {
   }
 
   enviarPeriodo() {
-    const periodo = { periodo: this.angForm.value };
+    let ven = new Date(this.angForm.get('fchVen').value);
+    let sem = 1;
+    if (ven.getMonth() >= 7) {
+      sem = 2;
+    }
+    const periodo = {
+      fch_inicio: this.angForm.get('fchIn').value,
+      fch_fin: this.angForm.get('fchVen').value,
+      año: ven.getFullYear(),
+      semestre: sem
+    };
     this.service.actualizarPeriodo(periodo).subscribe(
       data => {
-        if (data) {
-          //mostrar listado
-
-        }
+        console.log(data);
+        alert("Periodo actualizado con exito.");
       },
       error => {
         //cambiar los msg de error en base a back
-        if (error.status == 401) {
-          alert("Error, contraseña incorrecta o usuario incorrecto")
-        }
-
-        if (error.status == 400) {
-          alert("Error en el formato de los datos")
-        }
+        alert(error.error.error)
         console.log(error);
       });
   }

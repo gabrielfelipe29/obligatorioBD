@@ -10,12 +10,7 @@ export const getFuncionariosNoRegistrados = async (req, res) => {
     const [rows, fields] = await connection.execute(
         `
         SELECT *
-        FROM funcionariosUcu
-        WHERE NOT EXISTS (
-          SELECT 1
-          FROM funcionarios
-          WHERE funcionarios.ci = funcionariosUcu.ci
-        );
+        FROM actualizar;
       `
     );
 
@@ -24,11 +19,9 @@ export const getFuncionariosNoRegistrados = async (req, res) => {
 
     // Hacemos algo con los resultados (en este caso, los mostramos en la consola)
     console.log(fields);
-    res.json(rows);
-    res.send();
+    res.status(200).json(rows);
   } catch (error) {
     res.status(500).json({ message: error.message });
-    res.send();
     console.error("Error al ejecutar la consulta:", error);
   }
 };

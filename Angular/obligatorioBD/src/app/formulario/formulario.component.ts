@@ -112,26 +112,25 @@ export class FormularioComponent implements OnInit {
       this.service.registar(formulario).subscribe(
         data => {
           console.log(data);
-          if (data) {
-            //mostrar msg de exito
-            alert("Formulario enviado con éxito.");
-          }
+          //mostrar msg de exito
+          alert("Formulario enviado con éxito.");
+
         },
         error => {
-          alert(error); FormularioComponent
+          alert(error.error.error);
           console.log(error);
         });
     } else {
-      
+
       this.service.enviar(formulario).subscribe(
         data => {
-          if (data) {
-            //mostrar msg de exito
-            alert("Formulario enviado con éxito.");
-          }
+          //mostrar msg de exito
+          console.log(data)
+          alert("Formulario enviado con éxito.");
+
         },
         error => {
-          alert(error); FormularioComponent
+          alert(error.error.error);
           console.log(error);
         });
     }

@@ -18,15 +18,10 @@ export class MenuComponent {
     this.service.obtenerPeriodo().subscribe(
       data => {
         console.log(data);
-        if (data) {
-          let date = new Date;
-          let fchIn = new Date(data.periodo.fch_inicio);
-          let fchFin = new Date(data.periodo.fch_fin);
-          if (fchFin >= date && fchIn <= date) {
-            this.router.navigate(['/menu']);
-          } else {
-            alert('No hay periodos activos');
-          }
+        if (data.enPeriodo) {
+          this.router.navigate(['/menu']);
+        } else {
+          alert('No hay periodos activos');
         }
       },
       error => {

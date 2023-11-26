@@ -21,8 +21,7 @@ export const getFuncionariosNoRegistrados = async (req, res) => {
 
     // Liberamos la conexión
     connection.release();
-
-    // Hacemos algo con los resultados (en este caso, los mostramos en la consola)
+    
     console.log(fields);
     res.json(rows);
     res.send();

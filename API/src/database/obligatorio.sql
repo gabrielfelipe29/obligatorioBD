@@ -112,8 +112,8 @@ insert into agenda (ci, fch_agenda) values (12314324, '2023-01-15');
 
 drop table agenda;
 
-INSERT INTO logins (logId, password) VALUES ('usuario5',
-     '123');
+INSERT INTO logins (logId, password) VALUES ('usuario912',
+     md5('123'));
 
 
 
@@ -132,3 +132,12 @@ VALUES(1234567, 'Juan', 'Pérez', '1990-05-15', 'Calle 123', 5551234, 'juan.pere
 SELECT * FROM carnet_salud WHERE ci = 2345678;
 
 UPDATE carnet_salud SET fch_emision = '2023-02-01', fch_vencimiento = '2024-02-01', comprobante = "comprobante" WHERE ci = 2345678;
+
+
+Insert into rol (logId, rol) values ('usuario912', 'funcionario');
+
+select r.rol from rol r left join logins l on l.logId = r.logId where l.logId='usuario912' and l.password=md5('123');
+
+select md5('123')
+
+202cb962ac59075b964b07152d234b70

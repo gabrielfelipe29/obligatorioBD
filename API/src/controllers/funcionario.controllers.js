@@ -44,18 +44,16 @@ function isNullOrEmpty(value) {
 }
 
 function avoidSQLInjection(string) {
-  if(!onlyNumbers(string)){
-      if (string.includes('--')) {
-          return false;
-      }else if (string.toLowerCase().includes('drop')) {
-          return false;
-      }else if (string.toLowerCase().includes('table')) {
-          return false;
-      }else{
-          return true;
-      }  
-  }else 
-      return true;        
+  let s = string.toString()
+  if (s.includes('--')) {
+      return false;
+  }else if (s.toLowerCase().includes('drop')) {
+      return false;
+  }else if (s.toLowerCase().includes('table')) {
+      return false;
+  }else{
+      return true;
+  }  
 }
 
 // Esta función debe ser asincrónica ya que debe hacer una consulta a la tabla de login
@@ -71,7 +69,7 @@ async function logIsValid(logId) {
 
 // Esta función debe ser asincrónica ya que debe hacer una consulta a la tabla de funcionarios ucu
 async function validEmail(email) {  
-  if (avoidSQLInjection(email) && CorreoUCU(email)){
+  if (avoidSQLInjection(email)){
       const connection = await pool.getConnection();
       const [result] = await connection.execute('SELECT COUNT(*) AS count FROM funcionariosUcu WHERE ci = ?', [email] );
       connection.release();
@@ -126,7 +124,7 @@ export const login = async (req, res) => {
     // Realizamos la inserción del nuevo funcionario
 
     const [result] = await connection.query(
-      "select r.rol from rol r left join logins l on l.logId = r.logId where l.logId=? and l.password=?",
+      "select r.rol from rol r left join logins l on l.logId = r.logId where l.logId=? and l.password=md5(?)",
       [userid, contraseña]
     );
 
@@ -134,7 +132,6 @@ export const login = async (req, res) => {
 
     if (result[0]) {
       res.status(200).json({
-        token: "abc",
         tipo: result[0].rol,
       });
       //existe
@@ -213,18 +210,14 @@ export const addFuncionario = async (req, res)=>{
         }
 
         // Validación específica del email
-        if (req.body.email.length > 0 && CorreoUCU(req.body.email)) {
-            return res.status(400).json({ error: 'Se requiere que el mail tenga un formato valido.' });
-        }
-
-        const validEmail = await validEmail(req.body.email)
-        if (!validEmail){
+        const v = await validEmail(req.body.email)
+        if (!v){
           return res.status(400).json({ error: 'Se requiere que el mail este registrado en la planilla de la institución.' });
         }
 
         // Validación específica del logId
-        const validLogId = await validLogId(req.body.logId)
-        if (!validLogId){
+        const va = await logIsValid(req.body.logId)
+        if (!va){
           return res.status(400).json({ error: 'El usuario elegido ya se encuentra ocupado.' });
         }
 
@@ -232,10 +225,11 @@ export const addFuncionario = async (req, res)=>{
         const connection = await pool.getConnection();
 
         // Realizamos la inserción del nuevo funcionario
-        const [result1] = await connection.execute('INSERT INTO logins (logId, password) VALUES (?, ?)', [req.body.logId, req.body.contraseña]);
+        const [result1] = await connection.execute('INSERT INTO logins (logId, password) VALUES (?, md5(?))', [req.body.logId, req.body.contraseña]);
         const [result2] = await connection.execute('INSERT INTO funcionarios (ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.ci, req.body.nombre, req.body.apellido, req.body.fch_nacimiento, req.body.direccion, req.body.telefono, req.body.email, req.body.logId]);
         const [result3] = await connection.execute('INSERT INTO carnet_salud (ci, fch_emision, fch_vencimiento, comprobante) VALUES (?, ?, ?, ?)',[req.body.ci, req.body.fch_emision, req.body.fch_vencimiento, req.body.comprobante]);
-
+        const [result4] = await connection.execute('Insert into rol (logId, rol) values (?, ?);', [req.body.logId, "funcionario"]);
+        
         // Liberamos la conexión
         connection.release();
 

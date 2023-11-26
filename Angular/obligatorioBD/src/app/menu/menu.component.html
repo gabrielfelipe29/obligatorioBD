@@ -22,27 +22,30 @@
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">PERÍODO</h5>
+        <div *ngIf="esAdmin()" class="containeradmin" >
+                <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">PERÍODO</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Para actualizar el período del formulario de actualización.</p>
+                        <a href="/periodo" class="btn btn-primary">Actualizar periodo</a>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="card-text">Para actualizar el período del formulario de actualización.</p>
-                    <a href="/periodo" class="btn btn-primary">Actualizar periodo</a>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">LISTAR</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Para listar las personas que no actualizaron su formulario.</p>
+                        <a href="/listado" class="btn btn-primary">Listar personas</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">LISTAR</h5>
-                </div>
-                <div class="card-body">
-                    <p class="card-text">Para listar las personas que no actualizaron su formulario.</p>
-                    <a href="/listado" class="btn btn-primary">Listar personas</a>
-                </div>
-            </div>
-        </div>
+        
     </div>
 </div>

@@ -11,7 +11,6 @@ export class LoginComponent {
 
   user = ""
   password = ""
-
   userValid: Boolean = true
   passValid: Boolean = true
 
@@ -20,25 +19,14 @@ export class LoginComponent {
   }
 
   login() {
-    const administrador = { administrador: { id: this.user, contraseña: this.password }};
-    this.loginService.login(administrador).subscribe(
+    this.loginService.login(this.user,this.password).subscribe(
       data => {
-        if (data && data.token) {
-          console.log(data)
-          this.loginService.setToken(data.token);
-          this.loginService.setUserData(this.user, this.password);
-          this.router.navigateByUrl('/inicio');
-        }
-        
+        console.log(data)
+          this.loginService.setTipo(data.tipo)
+          this.router.navigateByUrl('/menu');
       },
       error => {
-        if (error.status == 401) {
-          alert("Error, contraseña incorrecta o usuario incorrecto")
-        }
-
-        if (error.status == 400) {
-          alert("Error en el formato de los datos")
-        }
+        alert(error)
         console.log(error);
       });
   }

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormularioService } from '../formulario.service';
 import { Router } from '@angular/router';
+import { LoginService } from '../login.service';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -8,10 +9,9 @@ import { Router } from '@angular/router';
 })
 export class MenuComponent {
 
-  constructor(private service: FormularioService, private router: Router) {
+  constructor(private service: FormularioService, private router: Router,private serviciolog: LoginService) {
 
   }
-
   formulario() {
     //se verifica que se esté en un periodo y se lo deja acceder al formulario
 
@@ -29,6 +29,13 @@ export class MenuComponent {
         alert(error.error.error);
       });
 
+
+      
+
   }
+  esAdmin(): boolean {
+        const tipoUsuario = this.serviciolog.getTipoUsuario().tipo;
+        return tipoUsuario === 'admin';
+      }
 
 }

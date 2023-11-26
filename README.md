@@ -16,3 +16,16 @@ Para levantar la app ejecute los comandos en el siguiente orden, esperando a que
 2) Ir a /API y ejecutar: npm run dev
 3) Ir a /Angular/obligatorioBD y ejecutar: ng serve --open
 4) Dirigirse a localhost:4200 en el navegador
+
+ANTES DE USAR LA APP:
+Hay un usuario administrador con usuario: admin y contraseña: admin
+Existen 8 usuarios en la tabla "funcionariosUcu" que son los únicos que pueden registrarse al sistema a través de su CI. 
+Estás son: 
+  - 23456789
+  - 34567891
+  - 45678912
+  - 56789123
+  - 67891234
+  - 78912345
+  - 89123456
+  - 91234567

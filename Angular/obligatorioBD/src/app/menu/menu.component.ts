@@ -17,22 +17,16 @@ export class MenuComponent {
 
     this.service.obtenerPeriodo().subscribe(
       data => {
-        if (data == true) {
+        console.log(data);
+        if (data.enPeriodo) {
           this.router.navigate(['/menu']);
+        } else {
+          alert('No hay periodos activos');
         }
       },
       error => {
-        //cambiar los msg de error en base a back
-        if (error.status == 401) {
-          alert("Error, contraseña incorrecta o usuario incorrecto")
-        }
-
-        if (error.status == 400) {
-          alert("Error en el formato de los datos")
-        }
-        
         console.log(error);
-        alert("No hay periodos activos.");
+        alert(error.error.error);
       });
 
 

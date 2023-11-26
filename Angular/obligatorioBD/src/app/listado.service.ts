@@ -9,7 +9,7 @@ export class ListadoService {
   constructor(private http: HttpClient) { }
 
   listado(): Observable<any> {
-    return this.http.get("http://localhost:3000/");
+    return this.http.get("http://localhost:3005/lista/obtenerNoRegistrados");
   }
 
 }

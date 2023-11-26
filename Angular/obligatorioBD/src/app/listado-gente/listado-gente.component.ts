@@ -14,35 +14,22 @@ export class ListadoGenteComponent {
 
   }
   angForm: FormGroup;
-  personas = [{ email: 'email1@gmail.com', datos: 'Pedro Perez' },
-  { email: 'email2@gmail.com', datos: 'Juan Sanchez' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' },
-  { email: 'email3@gmail.com', datos: 'Carlos Paz' }];
-  date = '2023-11-13';
+  personas = [];
   datos = "";
   email = "";
 
-
-
   ngOnInit(): void {
-
-    for (let i = 0; i < this.personas.length; i++) {
-      this.datos = this.datos + this.personas[i].email + " - " + this.personas[i].datos + " \n";
-      this.email = this.email + this.personas[i].email + " \n";
-    }
-
+    this.listarGente();
   }
 
+  cargarDatos() {
+    this.datos = "";
+    this.email = "";
+    for (let i = 0; i < this.personas.length; i++) {
+      this.datos = this.datos + this.personas[i].ci + " - " + this.personas[i].nombre + " - " + this.personas[i].apellido + " - " + this.personas[i].telefono + " - " + this.personas[i].email + " \n";
+      this.email = this.email + this.personas[i].email + " \n";
+    }
+  }
   copiarTexto() {
     var copyText = (<HTMLInputElement>document.getElementById("email"));
     copyText.select();
@@ -56,20 +43,15 @@ export class ListadoGenteComponent {
   listarGente() {
     this.service.listado().subscribe(
       data => {
-        if (data) {
-          //llamar lo que esta en ngOnInit y cargar esos datos a los dos textarea
-
-        }
+        this.email = ""
+        this.datos = ""
+        console.log(data);
+        this.personas = data;
+        this.cargarDatos()
       },
       error => {
         //cambiar los msg de error en base a back
-        if (error.status == 401) {
-          alert("Error, contraseña incorrecta o usuario incorrecto")
-        }
-
-        if (error.status == 400) {
-          alert("Error en el formato de los datos")
-        }
+        alert(error.error.error);
         console.log(error);
       });
   }

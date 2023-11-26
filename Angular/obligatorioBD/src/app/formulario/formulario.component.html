@@ -35,6 +35,18 @@
                 Nombre no puede estar vacío.
             </div>
         </div>
+
+        <div class="form-group">
+            <label>Apellido:</label>
+            <input class="form-control" formControlName="lastname" type="text">
+        </div>
+
+        <div class="error"
+            *ngIf="angForm.controls['lastname'].invalid && (angForm.controls['lastname'].dirty || angForm.controls['lastname'].touched)">
+            <div [hidden]="!angForm.controls['lastname'].errors.required">
+                Apellido no puede estar vacío.
+            </div>
+        </div>
         <!-- REGISTRARSE -->
         <div *ngIf="registrar" class="form-group">
             <label>Nombre de usuario:</label>
@@ -136,6 +148,17 @@
             </div>
         </div>
 
+        <div *ngIf="!escondido" class="form-group">
+            <label>Fecha Emisión:</label>
+            <input class="form-control" formControlName="fchEm" min="{{date | date:'yyyy-MM-dd'}}" type="date">
+        </div>
+
+        <div class="error" *ngIf="!escondido && angForm.controls['fchEm'].invalid && (angForm.controls['fchEm'].dirty 
+            || angForm.controls['fchEm'].touched)">
+            <div [hidden]="!angForm.controls['fchEm'].errors.required">
+                Fecha de emision no puede estar vacía.
+            </div>
+        </div>
 
         <div *ngIf="!escondido" class="form-group">
             <label>Fecha Vencimiento:</label>
@@ -148,6 +171,8 @@
                 Fecha de vencimiento no puede estar vacía.
             </div>
         </div>
+
+
 
         <div *ngIf="!escondido" class="form-group">
             <label>Comprobante:</label>

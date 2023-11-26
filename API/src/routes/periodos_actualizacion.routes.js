@@ -6,10 +6,10 @@ import { addPeriodo } from "../controllers/periodos_actualizacion.controller.js"
 
 const router = Router();
 
-// Obtener todos los funcionarios.
+// Obtener el periodo.
 router.get('/peridosActializacion', getPeriodo);
 
-// Registrar un funcionario 
+// Modificar el periodo
 router.post('/peridosActializacion', addPeriodo)
 
 export default router;

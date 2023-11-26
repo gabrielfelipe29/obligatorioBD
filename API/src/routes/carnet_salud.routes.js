@@ -6,10 +6,10 @@ import { putCarnet } from "../controllers/carnet_salud.controllers.js";
 
 const router = Router();
 
-// Obtener todos los funcionarios.
+// Obtener el carnet de salud
 router.get('/carneSalud', getCarnet);
 
-// Registrar un funcionario 
+// Modificar el carnet de salud
 router.post('/carneSalud', putCarnet)
 
 export default router;

@@ -15,7 +15,7 @@ const oAuth2Client = new google.auth.OAuth2(
     REDIRECT_URI
 )
 
-router = Router();
+const router = Router();
 
 
 export const sendMail = async (req, res) => {
@@ -48,7 +48,7 @@ export const sendMail = async (req, res) => {
         console.log (error)
     }
 }
-router.get("/mails", sendMail)
+
+
 
 module.exports = router;
-

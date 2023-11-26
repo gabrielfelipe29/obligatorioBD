@@ -43,9 +43,11 @@ export class FormularioComponent implements OnInit {
     this.angForm = this.fb.group({
       ci: ['', [Validators.required, Validators.minLength(7), Validators.pattern('^[0-9]*$')]],
       name: ['', [Validators.required]],
+      lastname: ['', [Validators.required]],
       fchNac: ['', [Validators.required]],
       carne: ['', Validators.required],
       fchVen: '',
+      fchEm: '',
       comprobante: '',
       username: '',//required
       password: '',//required
@@ -58,10 +60,12 @@ export class FormularioComponent implements OnInit {
   onSelected(value: string): void {
     //pone como requisito que se complete la fecha de vencimiento y comprobante en base a lo que ingrese el usuario
     const controlFchVen = this.angForm.get('fchVen');
+    const controlFchEm = this.angForm.get('fchEm');
     const controlComprobante = this.angForm.get('comprobante');
     if (value === 'si') {
       //pongo los requisitos y cambio escondido a false
       this.escondido = false;
+      controlFchEm.setValidators(Validators.required);
       controlFchVen.setValidators(Validators.required);
       controlComprobante.setValidators(Validators.required);
     } else if (value === 'no') {
@@ -69,9 +73,12 @@ export class FormularioComponent implements OnInit {
       this.escondido = true;
       controlFchVen.reset();
       controlFchVen.clearValidators();
+      controlFchEm.reset();
+      controlFchEm.clearValidators();
       controlComprobante.reset();
       controlComprobante.clearValidators();
     }
+    controlFchEm.updateValueAndValidity();
     controlFchVen.updateValueAndValidity();
     controlComprobante.updateValueAndValidity();
   }
@@ -86,49 +93,47 @@ export class FormularioComponent implements OnInit {
 
   enviarFormulario() {
     //volver a verificar el periodo?
-    const formulario = { formulario: this.angForm.value };
-    console.log(formulario);
+    const formulario = {
+      ci: this.angForm.get('ci').value,
+      nombre: this.angForm.get('name').value,
+      apellido: this.angForm.get('lastname').value,
+      fch_nacimiento: this.angForm.get('fchNac').value,
+      direccion: this.angForm.get('domicilio').value,
+      telefono: this.angForm.get('tel').value,
+      email: this.angForm.get('email').value,
+      logId: this.angForm.get('username').value,
+      contraseña: this.angForm.get('password').value,
+      fch_emision: this.angForm.get('fchEm').value,
+      fch_vencimiento: this.angForm.get('fchVen').value,
+      comprobante: this.angForm.get('comprobante').value,
+    };
+
     if (this.registrar) {
       this.service.registar(formulario).subscribe(
         data => {
+          console.log(data);
           if (data) {
             //mostrar msg de exito
             alert("Formulario enviado con éxito.");
           }
         },
         error => {
-          //cambiar los msg de error en base a back
-          if (error.status == 401) {
-            alert("Error, contraseña incorrecta o usuario incorrecto")
-          }
-
-          if (error.status == 400) {
-            alert("Error en el formato de los datos")
-          }
+          alert(error); FormularioComponent
           console.log(error);
         });
     } else {
+      
       this.service.enviar(formulario).subscribe(
         data => {
           if (data) {
             //mostrar msg de exito
             alert("Formulario enviado con éxito.");
-
           }
         },
         error => {
-          //cambiar los msg de error en base a back
-          if (error.status == 401) {
-            alert("Error, contraseña incorrecta o usuario incorrecto")
-          }
-
-          if (error.status == 400) {
-            alert("Error en el formato de los datos")
-          }
+          alert(error); FormularioComponent
           console.log(error);
         });
     }
-
-
   }
 }

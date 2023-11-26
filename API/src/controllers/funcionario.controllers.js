@@ -10,7 +10,7 @@ const ciRegex = /^\d{6,8}$/;
 // Funciones para validar los datos pasados por parametro
 
 function onlyNumbers(s) {
-  return /^\d+$/.test(s);
+  return /^[0-9]+$/.test(s);
 }
 
 function isValidName(name) {

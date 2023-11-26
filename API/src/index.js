@@ -4,6 +4,9 @@ import cors from "cors";
 import FuncionariosRouter from "./routes/funcionarios.routes.js";
 import LoginRouter from "./routes/logins.routes.js";
 import AvisosRouter from "./routes/agenda.routes.js" // tiene q ser avisos.routes.
+import AgendaRouter from "./routes/agenda.routes.js"
+import PeriodosRouter from "./routes/periodos_actualizacion.routes.js"
+import CarnetRouter from "./routes/carnet_salud.routes.js"
 //jwt
 //abc
 //Inicialización
@@ -24,6 +27,9 @@ app.use(morgan('dev'));
 app.use(FuncionariosRouter);
 app.use(LoginRouter);
 app.use(AvisosRouter);  
+app.use(AgendaRouter);
+app.use(PeriodosRouter);
+app.use(CarnetRouter);
 
 // Debuging
 process.env.NODE_ENV = "development";

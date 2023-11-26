@@ -31,11 +31,12 @@ const ciRegex = /^\d{6,8}$/;
 // Funciones para validar los datos pasados por parametro
 
 function avoidSQLInjection(string) {
-    if (string.includes('--')) {
+    let s = string.toString()
+    if (s.includes('--')) {
         return false;
-    }else if (string.toLowerCase().includes('drop')) {
+    }else if (s.toLowerCase().includes('drop')) {
         return false;
-    }else if (string.toLowerCase().includes('table')) {
+    }else if (s.toLowerCase().includes('table')) {
         return false;
     }else{
         return true;
@@ -60,14 +61,15 @@ async function verifyUcuWorker(ci) {  // Esta función debe ser asincrónica ya 
 }
 
 function onlyNumbers(s) {
-    return /^\d+$/.test(s);
+    return /^[0-9]+$/.test(s);
 }
 
 function dateValidator(fecha) {
-    // Expresión regular para el formato "aaaa-mm-dd"
-    var regex = /^\d{4}-\d{2}-\d{2}$/;
+    // Expresión regular para el formato "aaaa-mm-dd" o "aaaa-mm-ddThh:mm:ss.sssZ"
+    var regex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}.\d{3}Z)?$/;
     return regex.test(fecha);
 }
+
 
 
 // Obtener fecha de una persona
@@ -80,12 +82,10 @@ export const getFecha = async (req, res)=>{
             return res.status(400).json({ error: 'Se requieren todos los campos para agregar un funcionario.'});
         }
 
-        if (onlyNumbers(req.body.ci)) {
+        try {
+            let cedula = parseInt(req.body.ci)
+        } catch (error) {
             return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
-        }
-
-        if(!avoidSQLInjection(req.body.ci)){
-            return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
         }
 
         // Obtenemos una conexión del pool
@@ -97,8 +97,8 @@ export const getFecha = async (req, res)=>{
         // Liberamos la conexión
         connection.release();
 
-        // Respondemos con el resultado de la inserción
-        res.status(201).json({ id: result.insertId, mensaje: 'Funcionario agregado correctamente.' });
+        // Respondemos con el resultado de la consulta
+        res.status(200).json({ fechas: result });
 
     } catch (error) {
         console.error('Error al obtener las fechas: ', error);
@@ -109,85 +109,40 @@ export const getFecha = async (req, res)=>{
 // Agendar una fecha 
 export const addFecha = async (req, res)=>{
     try {
-        const { ci, fecha } = req.body;
 
         // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
 
-        if(!avoidSQLInjection(ci)){
-            return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
-        }
+        try {
+            let cedula = parseInt(req.body.ci)
+            if(!avoidSQLInjection(cedula)){
+                return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
+            }
 
-        if (!ci || !fecha) {
-            return res.status(400).json({ error: 'Se requiere el campo de ci para identificar al empleado.' });
-        }
+            if(!dateValidator(req.body.fch_agenda)){
+                return res.status(400).json({ error: 'El formato de la fecha es incorrecto.' });
+            }    
 
-        if (onlyNumbers(ci)) {
+            // Obtenemos una conexión del pool
+            const connection = await pool.getConnection();
+
+            // Realizamos la inserción del nuevo funcionario
+            const [result] = await connection.execute('INSERT INTO agenda (ci, fch_agenda) VALUES (? , ?)', [req.body.ci, req.body.fch_agenda]);
+
+            // Liberamos la conexión
+            connection.release();
+
+            // Respondemos con el resultado de la inserción
+            res.status(201).json({ id: result.insertId, mensaje: 'Fecha agregada correctamente.' });
+
+        } catch (error) {
             return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
         }
-
-        if(!dateValidator(fecha)){
-            return res.status(400).json({ error: 'El formato de la fecha es incorrecto.' });
-        }
-
-        // Obtenemos una conexión del pool
-        const connection = await pool.getConnection();
-
-        // Realizamos la inserción del nuevo funcionario
-        const [result] = await connection.execute('INSERT INTO agenda (ci, fch_agenda) VALUES (? , ?)', [ci, fecha]);
-
-        // Liberamos la conexión
-        connection.release();
-
-        // Respondemos con el resultado de la inserción
-        res.status(201).json({ id: result.insertId, mensaje: 'Funcionario agregado correctamente.' });
-
     } catch (error) {
         console.error('Error al obtener las fechas: ', error);
         res.status(500).json({ error: 'Error interno del servidor.' });
     }
 }
 
-// Modificar una fecha ya registrada.
-
-export const modifyFecha = async (req, res)=>{
-    try {
-        const { ci, fecha } = req.body;
-
-        // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
-
-        if (!ci || !fecha) {
-            return res.status(400).json({ error: 'Se requiere el campo de ci para identificar al empleado.' });
-        }
-
-        if (onlyNumbers(ci)) {
-            return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
-        }
-
-        if(!avoidSQLInjection(ci)){
-            return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
-        }
-
-        if(!dateValidator(fecha)){
-            return res.status(400).json({ error: 'El formato de la fecha es incorrecto.' });
-        }
-
-        // Obtenemos una conexión del pool
-        const connection = await pool.getConnection();
-
-        // Realizamos la inserción del nuevo funcionario
-        const [result] = await connection.execute('INSERT INTO agenda (ci, fch_agenda) VALUES (? , ?)', [ci, fecha]);
-
-        // Liberamos la conexión
-        connection.release();
-
-        // Respondemos con el resultado de la inserción
-        res.status(201).json({ id: result.insertId, mensaje: 'Funcionario agregado correctamente.' });
-
-    } catch (error) {
-        console.error('Error al obtener las fechas: ', error);
-        res.status(500).json({ error: 'Error interno del servidor.' });
-    }
-}
 
 /*
     Se tendría que considerar el hecho de crear tablas para el login

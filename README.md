@@ -19,14 +19,13 @@ Para levantar la app ejecute los comandos en el siguiente orden, esperando a que
 
 ANTES DE USAR LA APP:
 Hay un usuario administrador con usuario: admin y contraseña: admin
-Existen 9 usuarios en la tabla "funcionariosUcu" que son los únicos que pueden registrarse al sistema a través de su CI. 
+Existen 8 usuarios en la tabla "funcionariosUcu" que son los únicos que pueden registrarse al sistema a través de su CI. 
 Estás son: 
-1) 56789123
-2) 23456789
-3) 34567891
-4) 45678912
-5) 56789123
-6) 67891234
-7) 78912345
-8) 89123456
-9) 91234567
+1) 23456789
+2) 34567891
+3) 45678912
+4) 56789123
+5) 67891234
+6) 78912345
+7) 89123456
+8) 91234567

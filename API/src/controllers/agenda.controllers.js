@@ -70,7 +70,7 @@ function dateValidator(fecha) {
 }
 
 
-// Obtener fecha de una persona
+// Obtener fecha de una persona, Agendar una fecha 
 export const addFecha = async (req, res)=>{
     try {
 

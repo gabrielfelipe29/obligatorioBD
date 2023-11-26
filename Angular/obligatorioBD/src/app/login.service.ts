@@ -10,8 +10,12 @@ export class LoginService {
 
   constructor(private http: HttpClient,  private cookies: CookieService) { }
 
-  login(user: any): Observable<any> {
-    return this.http.post("http://localhost:3000/login", user);
+  login(logid,contraseña): Observable<any> {
+    let user={
+      logId:logid,
+      password:contraseña
+    }
+    return this.http.post("http://localhost:3005/login", user);
   }
 
   setToken(token: string) {
@@ -47,9 +51,4 @@ export class LoginService {
     this.cookies.delete("token");
   }
 
- 
-
-  singUp(user: String, pass: String){
-    
-  }
 }

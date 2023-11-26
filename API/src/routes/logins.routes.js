@@ -4,7 +4,7 @@ import { get } from "../controllers/logins.controllers.js";
 
 const router = Router();
 
-router.get("/login", login);
+router.post("/login", login);
 router.get("/get", get);
 
 export default router;

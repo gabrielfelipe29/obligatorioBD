@@ -126,7 +126,7 @@ export const login = async (req, res) => {
     // Realizamos la inserción del nuevo funcionario
 
     const [result] = await connection.query(
-      "select r.rol from rol r left join logins l on l.logId = r.logId where l.logId=? and l.password=?",
+      "select r.rol from rol r left join logins l on l.logId = r.logId where l.logId=? and l.password=md5(?)",
       [userid, contraseña]
     );
 
@@ -213,10 +213,6 @@ export const addFuncionario = async (req, res)=>{
         }
 
         // Validación específica del email
-        if (req.body.email.length > 0 && CorreoUCU(req.body.email)) {
-            return res.status(400).json({ error: 'Se requiere que el mail tenga un formato valido.' });
-        }
-
         const validEmail = await validEmail(req.body.email)
         if (!validEmail){
           return res.status(400).json({ error: 'Se requiere que el mail este registrado en la planilla de la institución.' });
@@ -232,10 +228,11 @@ export const addFuncionario = async (req, res)=>{
         const connection = await pool.getConnection();
 
         // Realizamos la inserción del nuevo funcionario
-        const [result1] = await connection.execute('INSERT INTO logins (logId, password) VALUES (?, ?)', [req.body.logId, req.body.contraseña]);
+        const [result1] = await connection.execute('INSERT INTO logins (logId, password) VALUES (?, md5(?))', [req.body.logId, req.body.contraseña]);
         const [result2] = await connection.execute('INSERT INTO funcionarios (ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.ci, req.body.nombre, req.body.apellido, req.body.fch_nacimiento, req.body.direccion, req.body.telefono, req.body.email, req.body.logId]);
         const [result3] = await connection.execute('INSERT INTO carnet_salud (ci, fch_emision, fch_vencimiento, comprobante) VALUES (?, ?, ?, ?)',[req.body.ci, req.body.fch_emision, req.body.fch_vencimiento, req.body.comprobante]);
-
+        const [result4] = await connection.execute('Insert into rol (logId, rol) values (?, ?);')
+        
         // Liberamos la conexión
         connection.release();
 

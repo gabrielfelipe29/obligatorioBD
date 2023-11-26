@@ -4,10 +4,10 @@ import { addFecha } from "../controllers/agenda.controllers.js";
 
 const router = Router();
 
-// Obtener todos los funcionarios.
+// Obtener fecha de agenda
 router.get('/agenda', getFecha);
 
-// Registrar un funcionario
+// Registrar una fecha 
 router.post('/agenda', addFecha)
 
 

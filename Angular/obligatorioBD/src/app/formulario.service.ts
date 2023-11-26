@@ -15,7 +15,7 @@ export class FormularioService {
   }
 
   registar(formulario: any): Observable<any> {
-    return this.http.post("http://localhost:3000/", formulario);
+    return this.http.post("http://localhost:3000/funcionario", formulario);
   }
   
   obtenerPeriodo(): Observable<any> {

@@ -1,30 +1,62 @@
-<div class="container" *ngIf="formSubmitted">
-    <form [formGroup]="group" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label>Nombre:</label>
-        <input class="form-control" formControlName="name" type="text">
-      </div>
-  
-      <div class="form-group">
-        <label>CI:</label>
-        <input class="form-control" formControlName="ci" type="text" minlength="7" maxlength="8" pattern="[0-9]*">
-      </div>
-  
-      <div class="form-group">
-        <label>Elegir fecha</label>
-        <input class="form-control" formControlName="fchNac" type="date">
-      </div>
+<div class="container">
+  <h1>
+    SACAR FECHA
+  </h1>
+  <form [formGroup]="angForm">
+    <div class="form-group">
+      <label>Nombre:</label>
+      <input class="form-control" formControlName="name" type="text">
+    </div>
 
-      <button type="submit" class="btn btn-primary">Guardar</button>
+    <div class="error"
+      *ngIf="angForm.controls['name'].invalid && (angForm.controls['name'].dirty || angForm.controls['name'].touched)">
+      <div [hidden]="!angForm.controls['name'].errors.required">
+        Nombre no puede estar vacío.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>CI:</label>
+      <input class="form-control" formControlName="ci" type="text" minlength="7" maxlength="8" pattern="[0-9]*">
+    </div>
+
+    <div class="error" *ngIf="angForm.controls['ci'].invalid && (angForm.controls['ci'].dirty || 
+            angForm.controls['ci'].touched)">
+      <div [hidden]="!angForm.controls['ci'].errors.required">
+        CI no puede estar vacía.
+      </div>
+      <div [hidden]="!angForm.controls['ci'].errors.minlength">
+        Largo mínimo de 7 caracteres.
+      </div>
+      <div [hidden]="!angForm.controls['ci'].errors.pattern">
+        Solo se permiten números.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Elegir fecha:</label>
+      <input class="form-control" formControlName="fchNac" type="date" min="{{date | date:'yyyy-MM-dd'}}">
+    </div>
+
+    <div class="error" *ngIf="angForm.controls['fchNac'].invalid && (angForm.controls['fchNac'].dirty 
+            || angForm.controls['fchNac'].touched)">
+      <div [hidden]="!angForm.controls['fchNac'].errors.required">
+        Fecha no puede estar vacía.
+      </div>
+    </div>
+    <br>
+    <div id="botones">
       <button type="submit" class="btn btn-secondary" (click)="volver()">
         Volver
-    </button>
-    </form>
-  
-    <!-- Mensaje de confirmación -->
+      </button>
+      <button type="submit" (click)="onSubmit()" [disabled]="angForm.pristine || angForm.invalid"
+        class="btn btn-primary">Guardar</button>
+    </div>
+  </form>
+
+  <!-- Mensaje de confirmación -->
 
 </div>
 <div *ngIf="mostrar">
-    <p>Su consulta fue enviada.</p>
+  <p>Su consulta fue enviada.</p>
 </div>
-  

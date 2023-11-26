@@ -15,7 +15,7 @@ export class LoginComponent {
   passValid: Boolean = true
 
   signup(){
-    this.router.navigate(['/registro']);
+    this.router.navigate(['/register']);
   }
 
   login() {

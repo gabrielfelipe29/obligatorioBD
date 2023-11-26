@@ -21,8 +21,9 @@ export class LoginComponent {
   login() {
     this.loginService.login(this.user,this.password).subscribe(
       data => {
+        console.log(data)
           this.loginService.setTipo(data.tipo)
-          this.router.navigateByUrl('/inicio');
+          this.router.navigateByUrl('/menu');
       },
       error => {
         alert(error)

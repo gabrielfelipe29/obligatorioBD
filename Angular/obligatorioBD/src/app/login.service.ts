@@ -15,6 +15,8 @@ export class LoginService {
       logId:logid,
       password:contraseña
     }
+    
+
     return this.http.post("http://localhost:3005/login", user);
   }
 
@@ -28,11 +30,6 @@ export class LoginService {
   estaLogeado(){
     return this.cookies.check("userID")
   }
-
-  setTipo(tipo:string){
-    this.cookies.set("tipo",tipo)
-  }
-  
   setUserData(user: string, password: string) {
     this.cookies.set("userID", user);
     /* this.cookies.set("userPassword", password); */
@@ -42,8 +39,12 @@ export class LoginService {
     return { user: this.cookies.get("userID")}
   }
 
-  gettypeuser(){
-    return {tipo: this.cookies.get("type")}
+  setTipo(tipo: string) {
+    this.cookies.set("rol", tipo);
+  }
+  
+  getTipoUsuario() {
+    return { tipo: this.cookies.get("rol") };
   }
 
   logOut(){

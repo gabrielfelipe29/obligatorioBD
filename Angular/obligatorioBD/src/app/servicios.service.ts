@@ -9,11 +9,12 @@ export class ServiciosService {
   constructor(private http: HttpClient) { }
 
   sacarfecha(ci,fecha){
+    const numeroci: number = Number(ci);
     let nuevafecha={
-      ci:ci,
-      fecha:fecha
+      ci:numeroci,
+      fch_agenda:fecha
     }
-    return this.http.post("http://localhost:3000/agenda",nuevafecha,{ observe: 'response' }).subscribe(
+    return this.http.post("http://localhost:3005/agenda",nuevafecha,{ observe: 'response' }).subscribe(
       (response: HttpResponse<any>) => {
         console.log(response)
       },

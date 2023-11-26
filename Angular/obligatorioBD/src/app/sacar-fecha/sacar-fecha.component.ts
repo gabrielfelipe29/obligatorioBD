@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ServiciosService } from '../servicios.service';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class SacarFechaComponent {
   angForm: FormGroup;
   date = new Date;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router,private servicio:ServiciosService) {
     this.createForm();
   }
 
@@ -36,6 +37,9 @@ export class SacarFechaComponent {
     // Si llego acá es que ya esta validado el formulario
     if (this.angForm.valid) {
       this.mostrar = true;
+      const date = this.angForm.get('fchNac').value;
+      const ci= this.angForm.get('ci').value;
+      this.servicio.sacarfecha(ci,date);
       // Aquí podrías realizar alguna acción como enviar datos al servidor
       // y luego mostrar el mensaje de confirmación
       this.formSubmitted = false;

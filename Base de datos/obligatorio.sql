@@ -43,7 +43,7 @@ create table funcionariosUcu
 -- Tabla agenda
 create table agenda
 (
-    nro        integer,
+    nro        integer auto_increment,
     ci         integer,
     fch_agenda date,
     primary key(nro)
@@ -122,7 +122,7 @@ DELIMITER ;
 
 -- DATOS DE PRUEBA
 -- Insertando administrador
-insert into logins(logId, password) values ('admin', 'admin');
+insert into logins(logId, password) values ('admin', md5('admin'));
 insert into rol (logId, rol) VALUES ('admin','admin');
 insert into funcionariosUcu(ci, nombre, apellido, fch_nacimiento, direccion, telefono, email)
 values (1,'admin','admin', CURRENT_DATE, 'domicilio admin','099099099','admin@email.com');
@@ -147,4 +147,3 @@ insert into periodos_actualizacion(ano, semestre, fch_inicio, fch_fin) values (2
 
 -- Para que la tabla este cargada por primera vez
 call actualizar();
-

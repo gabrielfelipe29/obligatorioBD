@@ -36,13 +36,25 @@ export class SacarFechaComponent {
     // Validar el formulario
     // Si llego acá es que ya esta validado el formulario
     if (this.angForm.valid) {
-      this.mostrar = true;
+      const date = this.angForm.get('fchNac').value;
+      const ci= this.angForm.get('ci').value;
+      this.servicio.sacarfecha(ci, date).subscribe(
+        data => {
+          console.log(data);
+          alert("Periodo actualizado con exito.");
+        },
+        error => {
+          //cambiar los msg de error en base a back
+          alert(error.error.error)
+          console.log(error);
+        });
+      /* this.mostrar = true;
       const date = this.angForm.get('fchNac').value;
       const ci= this.angForm.get('ci').value;
       this.servicio.sacarfecha(ci,date);
       // Aquí podrías realizar alguna acción como enviar datos al servidor
       // y luego mostrar el mensaje de confirmación
-      this.formSubmitted = false;
+      this.formSubmitted = false; */
     }
   }
 }

@@ -19,7 +19,7 @@ export class MenuComponent {
       data => {
         console.log(data);
         if (data.enPeriodo) {
-          this.router.navigate(['/menu']);
+          this.router.navigate(['/formulario']);
         } else {
           alert('No hay periodos activos');
         }

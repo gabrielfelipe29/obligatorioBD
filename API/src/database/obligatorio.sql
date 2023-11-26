@@ -43,7 +43,7 @@ create table funcionariosUcu
 -- Tabla agenda
 create table agenda
 (
-    nro        integer primary key AUTO_INCREMENT ,
+    nro        integer primary key AUTO_INCREMENT default (1),
     ci         integer(7),
     fch_agenda date
 );
@@ -138,6 +138,6 @@ Insert into rol (logId, rol) values ('usuario912', 'funcionario');
 
 select r.rol from rol r left join logins l on l.logId = r.logId where l.logId='usuario912' and l.password=md5('123');
 
-select md5('123')
+select md5('123');
 
-202cb962ac59075b964b07152d234b70
+INSERT INTO agenda (ci, fch_agenda) VALUES (123213 , '2023-02-02');

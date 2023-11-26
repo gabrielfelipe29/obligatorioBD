@@ -126,7 +126,7 @@ export const addFecha = async (req, res)=>{
             const connection = await pool.getConnection();
 
             // Realizamos la inserción del nuevo funcionario
-            const [result] = await connection.execute('INSERT INTO agenda (ci, fch_agenda) VALUES (? , ?)', [req.body.ci, req.body.fch_agenda]);
+            const [result] = await connection.execute('INSERT INTO agenda (ci, fch_agenda) VALUES (? , ?);', [req.body.ci, req.body.fch_agenda]);
 
             // Liberamos la conexión
             connection.release();

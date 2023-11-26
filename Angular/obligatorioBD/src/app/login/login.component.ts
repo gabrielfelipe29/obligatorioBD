@@ -26,7 +26,7 @@ export class LoginComponent {
           this.router.navigateByUrl('/menu');
       },
       error => {
-        alert(error)
+        alert(error.error.error)
         console.log(error);
       });
   }

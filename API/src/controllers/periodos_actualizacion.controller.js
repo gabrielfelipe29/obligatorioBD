@@ -1,5 +1,24 @@
 import pool from "../database/conection.js";
 
+function dateValidator(fecha) {
+    // Expresión regular para el formato "aaaa-mm-dd" o "aaaa-mm-ddThh:mm:ss.sssZ"
+    var regex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}.\d{3}Z)?$/;
+    return regex.test(fecha);
+}
+
+function avoidSQLInjection(string) {
+    let s = string.toString()
+    if (s.includes('--')) {
+        return false;
+    }else if (s.toLowerCase().includes('drop')) {
+        return false;
+    }else if (s.toLowerCase().includes('table')) {
+        return false;
+    }else{
+        return true;
+    }  
+}
+
 
 export const getPeriodo = async (req, res) => {
     try {
@@ -48,26 +67,29 @@ export const addPeriodo = async (req, res) => {
     }
 }
 
-/*
+
 // Modificación de un periodo 
 export const putFecha = async (req, res)=>{
     try {
 
         // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
         try {
-            let cedula = parseInt(req.body.ci)
-            if(!avoidSQLInjection(cedula)){
-                return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
-            }   
-
-            if(!dateValidator(req.body.fch_emision)){
+            if(!dateValidator(req.body.fch_inicio) && !dateValidator(req.body.fch_fin)){
                 return res.status(400).json({ error: 'El formato de la fecha es incorrecto.' });
             }
+
+            let año = parseInt(req.body.año)
+            let semestre = parseInt(req.body.semestre)
+
+            if(!avoidSQLInjection(año) && !avoidSQLInjection(semestre) &&  !avoidSQLInjection(req.body.fch_inicio) && !avoidSQLInjection(req.body.fch_fin)){
+                return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
+            }   
+            
             // Obtenemos una conexión del pool
             const connection = await pool.getConnection();
 
             // Realizamos la inserción del nuevo funcionario
-            const [result] = await connection.execute('UPDATE periodos_actualizacion SET año = ?, semestre = ?, fch_inicio = ?, fch_fin = ?;', [req.body.año, req.body.fch_vencimiento, req.body.comprobante, req.body.ci]);
+            const [result] = await connection.execute('UPDATE periodos_actualizacion SET año = ?, semestre = ?, fch_inicio = ?, fch_fin = ?;', [año, semestre, req.body.fch_inicio, req.body.fch_fin]);
 
             // Liberamos la conexión
             connection.release();
@@ -78,12 +100,7 @@ export const putFecha = async (req, res)=>{
         } catch (error) {
             return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
         }
-        
-
-        if (onlyNumbers(req.body.ci) && onlyNumbers(req.body.comprobante) && dateValidator(req.body.fch_emision)) {
-            return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
-        }
-
+    
         
 
     } catch (error) {

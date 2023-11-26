@@ -1,3 +1,4 @@
+import e from "express";
 import pool from "../database/conection.js";
 
 //Expresiones regulares utilizadas:
@@ -9,7 +10,7 @@ const ciRegex = /^\d{6,8}$/;
 // Funciones para validar los datos pasados por parametro
 
 function onlyNumbers(s) {
-  return /^\d+$/.test(s);
+  return /^[0-9]+$/.test(s);
 }
 
 function isValidName(name) {
@@ -33,8 +34,8 @@ function validDate(fecha) {
 }
 
 function validNumber(numero) {
-  // Expresión regular para verificar que el número tiene exactamente 7 dígitos
-  var regex = /^\d{7}$/;
+  // Expresión regular para verificar que el número tiene exactamente 9 dígitos
+  var regex = /^\d{9}$/;
   return regex.test(numero);
 }
 
@@ -55,6 +56,28 @@ function avoidSQLInjection(string) {
       }  
   }else 
       return true;        
+}
+
+// Esta función debe ser asincrónica ya que debe hacer una consulta a la tabla de login
+async function logIsValid(logId) {  
+  if (avoidSQLInjection(logId)){
+      const connection = await pool.getConnection();
+      const [result] = await connection.execute('SELECT COUNT(*) AS count FROM logins WHERE logId = ?', [logId]);
+      connection.release();
+      return result[0].count === 0;
+  }
+  return true;
+}
+
+// Esta función debe ser asincrónica ya que debe hacer una consulta a la tabla de funcionarios ucu
+async function validEmail(email) {  
+  if (avoidSQLInjection(email) && CorreoUCU(email)){
+      const connection = await pool.getConnection();
+      const [result] = await connection.execute('SELECT COUNT(*) AS count FROM funcionariosUcu WHERE ci = ?', [email] );
+      connection.release();
+      return result[0].count === 0;
+  }
+  return true;
 }
 
 //Obtener todos los funcionarios.
@@ -157,7 +180,6 @@ export const addFuncionario = async (req, res)=>{
             
             return res.status(400).json({ error: 'Se ha detectado el intento de inyección sql.' });
         }
-        
 
         // Validación específica del nombre
         if (!req.body.nombre.length > 0) {
@@ -194,6 +216,16 @@ export const addFuncionario = async (req, res)=>{
             return res.status(400).json({ error: 'Se requiere que el mail tenga un formato valido.' });
         }
 
+        const validEmail = await validEmail(req.body.email)
+        if (!validEmail){
+          return res.status(400).json({ error: 'Se requiere que el mail este registrado en la planilla de la institución.' });
+        }
+
+        // Validación específica del logId
+        const validLogId = await validLogId(req.body.logId)
+        if (!validLogId){
+          return res.status(400).json({ error: 'El usuario elegido ya se encuentra ocupado.' });
+        }
 
         // Obtenemos una conexión del pool
         const connection = await pool.getConnection();
@@ -201,6 +233,7 @@ export const addFuncionario = async (req, res)=>{
         // Realizamos la inserción del nuevo funcionario
         const [result1] = await connection.execute('INSERT INTO logins (logId, password) VALUES (?, ?)', [req.body.logId, req.body.contraseña]);
         const [result2] = await connection.execute('INSERT INTO funcionarios (ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.ci, req.body.nombre, req.body.apellido, req.body.fch_nacimiento, req.body.direccion, req.body.telefono, req.body.email, req.body.logId]);
+        const [result3] = await connection.execute('INSERT INTO carnet_salud (ci, fch_emision, fch_vencimiento, comprobante) VALUES (?, ?, ?, ?)',[req.body.ci, req.body.fch_emision, req.body.fch_vencimiento, req.body.comprobante]);
 
         // Liberamos la conexión
         connection.release();

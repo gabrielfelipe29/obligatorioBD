@@ -1,13 +1,13 @@
 import pool from "../database/conection.js";
 
 //Obtener todos los carnets.
-export const getAgenda = async (req, res)=>{
+export const getCarnets = async (req, res)=>{
     try {
         // Obtenemos una conexión del pool
         const connection = await pool.getConnection();
 
         // Realizamos la consulta
-        const [rows, fields] = await connection.execute('SELECT * FROM agenda');
+        const [rows, fields] = await connection.execute('SELECT * FROM carnet_salud');
 
         // Liberamos la conexión
         connection.release();
@@ -31,11 +31,12 @@ const ciRegex = /^\d{6,8}$/;
 // Funciones para validar los datos pasados por parametro
 
 function avoidSQLInjection(string) {
-    if (string.includes('--')) {
+    let s = string.toString()
+    if (s.includes('--')) {
         return false;
-    }else if (string.toLowerCase().includes('drop')) {
+    }else if (s.toLowerCase().includes('drop')) {
         return false;
-    }else if (string.toLowerCase().includes('table')) {
+    }else if (s.toLowerCase().includes('table')) {
         return false;
     }else{
         return true;
@@ -57,28 +58,103 @@ function onlyNumbers(s) {
 }
 
 function dateValidator(fecha) {
-    // Expresión regular para el formato "aaaa-mm-dd"
-    var regex = /^\d{4}-\d{2}-\d{2}$/;
+    // Expresión regular para el formato "aaaa-mm-dd" o "aaaa-mm-ddThh:mm:ss.sssZ"
+    var regex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}.\d{3}Z)?$/;
     return regex.test(fecha);
 }
 
 
+// Obtener carnet de una persona
+export const getCarnet = async (req, res)=>{
+    try {
+
+        // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
+        try {
+            let cedula = parseInt(req.body.ci)
+            if(!avoidSQLInjection(cedula)){
+                return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
+            } 
+    
+            // Obtenemos una conexión del pool
+            const connection = await pool.getConnection();
+            const [result] = await connection.execute('SELECT * FROM carnet_salud WHERE ci = ?', [req.body.ci]);
+            connection.release();
+
+            if (result.length > 0) {
+                res.status(200).json({ Carnet: result[0], mensaje: 'Carnet obtenido con éxito.' });
+            } else {
+                res.status(404).json({ mensaje: 'No se encontró ningún carnet para la cédula proporcionada.' });
+            }
+        } catch (error) {
+            return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
+        }
+
+    } catch (error) {
+        console.error('Error al obtener el carnet: ', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+}
+
+// Actualizar carnet 
+export const putCarnet = async (req, res)=>{
+    try {
+
+        // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
+        try {
+            let cedula = parseInt(req.body.ci)
+            if(!avoidSQLInjection(cedula)){
+                return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
+            }   
+
+            if(!dateValidator(req.body.fch_emision)){
+                return res.status(400).json({ error: 'El formato de la fecha es incorrecto.' });
+            }
+            // Obtenemos una conexión del pool
+            const connection = await pool.getConnection();
+
+            // Realizamos la inserción del nuevo funcionario
+            const [result] = await connection.execute('UPDATE carnet_salud SET fch_emision = ?, fch_vencimiento = ?, comprobante = ? WHERE ci = ?', [req.body.fch_emision, req.body.fch_vencimiento, req.body.comprobante, req.body.ci]);
+
+            // Liberamos la conexión
+            connection.release();
+
+            // Respondemos con el resultado de la inserción
+            res.status(201).json({mensaje: 'Carnet obtenido con exito.' });
+        
+        } catch (error) {
+            return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
+        }
+        
+
+        if (onlyNumbers(req.body.ci) && onlyNumbers(req.body.comprobante) && dateValidator(req.body.fch_emision)) {
+            return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
+        }
+
+        
+
+    } catch (error) {
+        console.error('Error al obtener el carnet: ', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+}
+
+// Agregar carnet 
+
+
+/*
+    Se tendría que considerar el hecho de crear tablas para el login
 // Obtener carnet de una persona
 export const addFecha = async (req, res)=>{
     try {
 
         // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
 
-        if (!req.body.ci) {
-            return res.status(400).json({ error: 'Se requieren todos los campos para agregar un funcionario.'});
+        if(!avoidSQLInjection(req.body.ci)){
+            return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
         }
 
         if (onlyNumbers(req.body.ci)) {
             return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
-        }
-
-        if(!avoidSQLInjection(req.body.ci)){
-            return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
         }
 
         // Obtenemos una conexión del pool
@@ -98,15 +174,5 @@ export const addFecha = async (req, res)=>{
         res.status(500).json({ error: 'Error interno del servidor.' });
     }
 }
-
-// Agendar una fecha 
-
-
-
-
-
-
-/*
-    Se tendría que considerar el hecho de crear tablas para el login
 
 */

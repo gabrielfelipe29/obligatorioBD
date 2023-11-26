@@ -53,7 +53,7 @@ create table carnet_salud(
     ci integer primary key ,
     fch_emision date,
     fch_vencimiento date,
-    comprobante blob
+    comprobante varchar(500)
 );
 
 -- Tabla periodos_actualizacion
@@ -63,6 +63,17 @@ create table periodos_actualizacion(
     fch_inicio date,
     fch_fin date
 );
+drop table periodos_actualizacion;
+
+-- Tabla rol
+create table rol
+(
+    logId varchar(50),
+    rol   varchar(50) check (rol in ('admin', 'funcionario')),
+    primary key (logId),
+    foreign key (logId) references logins(logId)
+);
+
 -- Insertar datos en la tabla logins
 INSERT INTO logins (logId, password) VALUES
 ('usuario1', 'contraseña1'),
@@ -89,8 +100,7 @@ INSERT INTO carnet_salud (ci, fch_emision, fch_vencimiento, comprobante) VALUES
 
 -- Insertar datos en la tabla periodos_actualizacion
 INSERT INTO periodos_actualizacion (año, semestre, fch_inicio, fch_fin) VALUES
-(2023, 1, '2023-01-01', '2023-06-30'),
-(2023, 2, '2023-07-01', '2023-12-31');
+(2023, 1, '2023-01-01', '2023-06-30');
 
 show tables;
 
@@ -119,3 +129,6 @@ VALUES(1234567, 'Juan', 'Pérez', '1990-05-15', 'Calle 123', 5551234, 'juan.pere
        (2345671, 'Marta', 'Gómez', '1985-05-20', 'Avenida Secundaria 456', 987654321, 'marta.gomez@email.com'),
        (3456782, 'Carlos', 'López', '1988-11-10', 'Ruta 789', 555123456, 'carlos.lopez@email.com');
 
+SELECT * FROM carnet_salud WHERE ci = 2345678;
+
+UPDATE carnet_salud SET fch_emision = '2023-02-01', fch_vencimiento = '2024-02-01', comprobante = "comprobante" WHERE ci = 2345678;

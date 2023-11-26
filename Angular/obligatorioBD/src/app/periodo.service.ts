@@ -9,7 +9,7 @@ export class PeriodoService {
   constructor(private http: HttpClient) { }
 
   actualizarPeriodo(periodo): Observable<any> {
-    return this.http.post("http://localhost:3000/", periodo);
+    return this.http.put("http://localhost:3005/peridosActializacion", periodo);
   }
 
 }

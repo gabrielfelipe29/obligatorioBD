@@ -132,7 +132,6 @@ export const login = async (req, res) => {
 
     if (result[0]) {
       res.status(200).json({
-        token: "abc",
         tipo: result[0].rol,
       });
       //existe

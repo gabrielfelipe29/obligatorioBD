@@ -44,7 +44,8 @@
                 Volver
             </button>
 
-            <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-primary">
+            <button type="submit" [disabled]="angForm.pristine || angForm.invalid" (click)="enviarPeriodo()"
+                class="btn btn-primary">
                 Guardar
             </button>
         </div>

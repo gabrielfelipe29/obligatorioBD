@@ -17,7 +17,7 @@ Para levantar la app ejecute los comandos en el siguiente orden, esperando a que
 3) Ir a /Angular/obligatorioBD y ejecutar: ng serve --open
 4) Dirigirse a localhost:4200 en el navegador
 
-ANTES DE USAR LA APP:
+CONSIDERACIONES ANTES DE USAR LA APP:
 Hay un usuario administrador con usuario: admin y contraseña: admin
 Existen 8 usuarios en la tabla "funcionariosUcu" que son los únicos que pueden registrarse al sistema a través de su CI. 
 Estás son: 
@@ -29,3 +29,8 @@ Estás son:
   - 78912345
   - 89123456
   - 91234567
+
+Existe un procedimiento llamado "actualizar()" que actualiza la tabla "actualizar", que contiene las personas que no enviaron su carnet de salud.
+Este procedimiento se ejecuta una vez cada 24 horas, por lo tanto, al usar la app la seccion de listado de personas va a aparecer desactualizado 
+hasta el dia siguiente.
+Para ver el listado actualizado basta llamar a este procedimiento en datagrip de la siguiente forma: "call actualizar()".

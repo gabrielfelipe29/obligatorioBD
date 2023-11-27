@@ -32,8 +32,8 @@ export class FormularioComponent implements OnInit {
       controlUsername.setValidators(Validators.required);
       controlPassword.setValidators(Validators.required);
       controlDomicilio.setValidators(Validators.required);
-      controlEmail.setValidators([Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$')]);
-      controlTel.setValidators([Validators.required, Validators.minLength(8), Validators.pattern('^[0-9]*$')]);
+      controlEmail.setValidators([Validators.required, Validators.pattern('[a-z0-9A-Z._%+-]+@[a-z0-9A-Z.-]+.[a-zA-Z]{2,4}$')]);
+      controlTel.setValidators([Validators.required, Validators.minLength(9), Validators.pattern('^[0-9]*$')]);
       this.header = "REGISTRARSE"
     }
   }
@@ -108,7 +108,7 @@ export class FormularioComponent implements OnInit {
       comprobante: this.angForm.get('comprobante').value,
       carne: this.angForm.get('carne').value
     };
-
+    console.log(formulario);
     if (this.registrar) {
       this.service.registar(formulario).subscribe(
         data => {

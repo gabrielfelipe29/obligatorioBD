@@ -3,17 +3,6 @@
     SACAR FECHA
   </h1>
   <form [formGroup]="angForm">
-    <div class="form-group">
-      <label>Nombre:</label>
-      <input class="form-control" formControlName="name" type="text">
-    </div>
-
-    <div class="error"
-      *ngIf="angForm.controls['name'].invalid && (angForm.controls['name'].dirty || angForm.controls['name'].touched)">
-      <div [hidden]="!angForm.controls['name'].errors.required">
-        Nombre no puede estar vacío.
-      </div>
-    </div>
 
     <div class="form-group">
       <label>CI:</label>

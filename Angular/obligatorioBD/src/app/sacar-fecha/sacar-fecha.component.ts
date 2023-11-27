@@ -21,7 +21,6 @@ export class SacarFechaComponent {
 
   createForm(): void {
     this.angForm = this.fb.group({
-      name: ['', Validators.required],
       ci: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8), Validators.pattern('[0-9]*')]],
       fchNac: ['', Validators.required]
     });

@@ -106,6 +106,7 @@ export class FormularioComponent implements OnInit {
       fch_emision: this.angForm.get('fchEm').value,
       fch_vencimiento: this.angForm.get('fchVen').value,
       comprobante: this.angForm.get('comprobante').value,
+      carne: this.angForm.get('carne').value
     };
 
     if (this.registrar) {

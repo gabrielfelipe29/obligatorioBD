@@ -161,7 +161,6 @@ export function add(req, res){
 //Registrar a un funcionario.
 export const addFuncionario = async (req, res)=>{
     try {
-
     // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
 
         if (!req.body.ci || !req.body.nombre || !req.body.apellido || !req.body.fch_nacimiento || !req.body.direccion || !req.body.telefono || !req.body.email || !req.body.logId) {
@@ -205,11 +204,11 @@ export const addFuncionario = async (req, res)=>{
         }
 
         // Validación específica del telefono
-        if (req.body.telefono.length > 0 && validNumber(req.body.telefono)) {
+        if (!validNumber(req.body.telefono)) {
             return res.status(400).json({ error: 'Se requiere que el teléfono tenga un formato valido.' });
         }
 
-        // Validación específica del email
+        // Validación específica del email QUE CARAJO HACE ESTO?
         const v = await validEmail(req.body.email)
         if (!v){
           return res.status(400).json({ error: 'Se requiere que el mail este registrado en la planilla de la institución.' });
@@ -227,7 +226,11 @@ export const addFuncionario = async (req, res)=>{
         // Realizamos la inserción del nuevo funcionario
         const [result1] = await connection.execute('INSERT INTO logins (logId, password) VALUES (?, md5(?))', [req.body.logId, req.body.contraseña]);
         const [result2] = await connection.execute('INSERT INTO funcionarios (ci, nombre, apellido, fch_nacimiento, direccion, telefono, email, logId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.ci, req.body.nombre, req.body.apellido, req.body.fch_nacimiento, req.body.direccion, req.body.telefono, req.body.email, req.body.logId]);
+              //verificar si carne es si o no y apartir de eso agregarle el carne o no
+
+        if(req.body.carne == "si"){
         const [result3] = await connection.execute('INSERT INTO carnet_salud (ci, fch_emision, fch_vencimiento, comprobante) VALUES (?, ?, ?, ?)',[req.body.ci, req.body.fch_emision, req.body.fch_vencimiento, req.body.comprobante]);
+        }
         const [result4] = await connection.execute('Insert into rol (logId, rol) values (?, ?);', [req.body.logId, "funcionario"]);
         
         // Liberamos la conexión

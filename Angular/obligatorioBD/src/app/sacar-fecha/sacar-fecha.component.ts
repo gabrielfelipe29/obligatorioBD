@@ -41,7 +41,7 @@ export class SacarFechaComponent {
       this.servicio.sacarfecha(ci, date).subscribe(
         data => {
           console.log(data);
-          alert("Periodo actualizado con exito.");
+          alert("Se agendó con exito.");
         },
         error => {
           //cambiar los msg de error en base a back

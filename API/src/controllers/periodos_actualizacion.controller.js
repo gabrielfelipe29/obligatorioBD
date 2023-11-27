@@ -132,26 +132,3 @@ export const putFecha = async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor." });
   }
 };
-
-/*
-// Obtención del perido de actualización más un booleano que indica si nos encontramos actualmente en el periodo
-export const getPeriodo = async (req, res)=>{
-    try {
-        // Obtenemos una conexión del pool
-        const connection = await pool.getConnection();
-
-        // Realizamos la inserción del nuevo funcionario
-        const [result] = await connection.execute('SELECT * FROM periodos_actualizacion ORDER BY fch_inicio DESC, fch_fin DESC LIMIT 1;');
-
-        // Liberamos la conexión
-        connection.release();
-
-        // Respondemos con el resultado de la inserción
-        res.status(201).json({ id: result.insertId, mensaje: 'Carnet obtenido con exito.' });
-
-    } catch (error) {
-        console.error('Error al obtener el carnet: ', error);
-        res.status(500).json({ error: 'Error interno del servidor.' });
-    }
-}
-*/

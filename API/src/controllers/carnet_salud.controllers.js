@@ -113,7 +113,12 @@ export const putCarnet = async (req, res)=>{
             const connection = await pool.getConnection();
 
             // Realizamos la inserción del nuevo funcionario
-            const [result] = await connection.execute('UPDATE carnet_salud SET fch_emision = ?, fch_vencimiento = ?, comprobante = ? WHERE ci = ?', [req.body.fch_emision, req.body.fch_vencimiento, req.body.comprobante, req.body.ci]);
+            try {
+                const [result3] = await connection.execute('INSERT INTO carnet_salud (ci, fch_emision, fch_vencimiento, comprobante) VALUES (?, ?, ?, ?)',[req.body.ci, req.body.fch_emision, req.body.fch_vencimiento, req.body.comprobante]);
+
+            } catch (error) {
+                const [result] = await connection.execute('UPDATE carnet_salud SET fch_emision = ?, fch_vencimiento = ?, comprobante = ? WHERE ci = ?', [req.body.fch_emision, req.body.fch_vencimiento, req.body.comprobante, req.body.ci]);
+            }
 
             // Liberamos la conexión
             connection.release();
@@ -137,42 +142,3 @@ export const putCarnet = async (req, res)=>{
         res.status(500).json({ error: 'Error interno del servidor.' });
     }
 }
-
-// Agregar carnet 
-
-
-/*
-    Se tendría que considerar el hecho de crear tablas para el login
-// Obtener carnet de una persona
-export const addFecha = async (req, res)=>{
-    try {
-
-        // Verificamos que se proporcionen los datos necesarios, las siguientes partes validan el formato de los datos y también evitan la inyección sql
-
-        if(!avoidSQLInjection(req.body.ci)){
-            return res.status(400).json({ error: 'La inyección sql no esta permitida.' });
-        }
-
-        if (onlyNumbers(req.body.ci)) {
-            return res.status(400).json({ error: 'El formato de los datos es erroneo.' });
-        }
-
-        // Obtenemos una conexión del pool
-        const connection = await pool.getConnection();
-
-        // Realizamos la inserción del nuevo funcionario
-        const [result] = await connection.execute('SELECT fch_agenda FROM agenda WHERE ci = ?;', [req.body.ci]);
-
-        // Liberamos la conexión
-        connection.release();
-
-        // Respondemos con el resultado de la inserción
-        res.status(201).json({ id: result.insertId, mensaje: 'Funcionario agregado correctamente.' });
-
-    } catch (error) {
-        console.error('Error al obtener las fechas: ', error);
-        res.status(500).json({ error: 'Error interno del servidor.' });
-    }
-}
-
-*/

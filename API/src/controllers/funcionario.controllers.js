@@ -68,10 +68,10 @@ async function logIsValid(logId) {
 }
 
 // Esta función debe ser asincrónica ya que debe hacer una consulta a la tabla de funcionarios ucu
-async function validEmail(email) {  
-  if (avoidSQLInjection(email)){
+async function validCi(ci) {  
+  if (avoidSQLInjection(ci)){
       const connection = await pool.getConnection();
-      const [result] = await connection.execute('SELECT COUNT(*) AS count FROM funcionariosUcu WHERE ci = ?', [email] );
+      const [result] = await connection.execute('SELECT COUNT(*) AS count FROM funcionariosUcu WHERE ci = ?', [ci] );
       connection.release();
       return result[0].count === 0;
   }
@@ -209,7 +209,7 @@ export const addFuncionario = async (req, res)=>{
         }
 
         // Validación específica del email QUE CARAJO HACE ESTO?
-        const v = await validEmail(req.body.email)
+        const v = await isValidCI(req.body.ci)
         if (!v){
           return res.status(400).json({ error: 'Se requiere que el mail este registrado en la planilla de la institución.' });
         }

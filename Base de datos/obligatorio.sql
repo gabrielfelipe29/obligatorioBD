@@ -148,3 +148,5 @@ insert into periodos_actualizacion(ano, semestre, fch_inicio, fch_fin) values (2
 
 -- Para que la tabla este cargada por primera vez
 call actualizar();
+
+select * from funcionarios

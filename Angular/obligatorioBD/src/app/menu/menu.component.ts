@@ -9,7 +9,7 @@ import { LoginService } from '../login.service';
 })
 export class MenuComponent {
 
-  constructor(private service: FormularioService, private router: Router,private serviciolog: LoginService) {
+  constructor(private service: FormularioService, private router: Router, private serviciolog: LoginService) {
 
   }
   formulario() {
@@ -30,12 +30,18 @@ export class MenuComponent {
       });
 
 
-      
+
 
   }
   esAdmin(): boolean {
-        const tipoUsuario = this.serviciolog.getTipoUsuario().tipo;
-        return tipoUsuario === 'admin';
-      }
+    const tipoUsuario = this.serviciolog.getTipoUsuario().tipo;
+    return tipoUsuario === 'admin';
+  }
+
+
+  cerrarSesion() {
+    this.serviciolog.logOut();
+    this.router.navigate(['/login']);
+  }
 
 }

@@ -14,16 +14,16 @@ export class LoginComponent {
   userValid: Boolean = true
   passValid: Boolean = true
 
-  signup(){
+  signup() {
     this.router.navigate(['/register']);
   }
 
   login() {
-    this.loginService.login(this.user,this.password).subscribe(
+    this.loginService.login(this.user, this.password).subscribe(
       data => {
         console.log(data)
-          this.loginService.setTipo(data.tipo)
-          this.router.navigateByUrl('/menu');
+        this.loginService.setTipo(data.tipo)
+        this.router.navigateByUrl('/menu');
       },
       error => {
         alert(error.error.error)

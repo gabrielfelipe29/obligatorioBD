@@ -101,7 +101,8 @@ create procedure actualizar()
         -- Borrar datos de la tabla que vamos a usar para los que no entregaron el formulario todavia
         delete from actualizar where ci is not null;
         -- Insertar los nuevos datos en la tabla
-        insert into actualizar(ci, nombre, apellido, fch_nacimiento, direccion, telefono, email) select fU.ci, fU.nombre, fU.apellido, fU.fch_nacimiento, fU.direccion, fU.telefono, fU.email from funcionariosUcu fU left join funcionarios on funcionarios.ci = fU.ci where funcionarios.ci is null;
+        insert into actualizar(ci, nombre, apellido, fch_nacimiento, direccion, telefono, email) select fU.ci, fU.nombre, fU.apellido, fU.fch_nacimiento, fU.direccion, fU.telefono, fU.email from funcionariosUcu fU left join carnet_salud c on c.ci = fU.ci where c.ci is null;
+
     end //
 
 DELIMITER ;

@@ -34,3 +34,15 @@ Existe un procedimiento llamado "actualizar()" que actualiza la tabla "actualiza
 Este procedimiento se ejecuta una vez cada 24 horas, por lo tanto, al usar la app la seccion de listado de personas va a aparecer desactualizado 
 hasta el dia siguiente.
 Para ver el listado actualizado basta llamar a este procedimiento en datagrip de la siguiente forma: "call actualizar()".
+
+FUNCIONALIDADES
+- AGENDA: permite al usuario agendarse.
+- PERIODO: permite al administrador modificar el periodo de actualizacion.
+- FORMULARIO: permite al usuario actualizar el formulario de carnet de salud.
+- LISTAR: permite al administrador ver los funcionarios que no enviaron su formulario de carnet de salud todavía. En este sistema, no esta disponible la
+  funcionalidad de enviar email cada 24H de forma automatica, por lo tanto, el administrador debe copiar todos los email a través del boton "copiar emails" y
+  enviarlo de forma manual.
+- REGISTRARSE: permite al usuario registrarse por primera vez (la CI debe estar en la tabla funcionariosUcu) a través del boton "Registrarse" en a pantalla de login.
+
+
+
